@@ -7,33 +7,38 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginRight="@dimen/margin_standard"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:useCompatPadding="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_item"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/margin_standard"
         app:layout_constraintBottom_toTopOf="@id/fab_main"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:useCompatPadding="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_delivery"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/margin_standard"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_main" />
+        app:layout_constraintEnd_toStartOf="@id/fab_main"
+        app:useCompatPadding="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_acquisition"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
-        android:layout_margin="@dimen/fab_margin"
+        android:padding="0dp"
+        app:useCompatPadding="true"
         app:layout_constraintBottom_toTopOf="@id/fab_delivery"
         app:layout_constraintEnd_toStartOf="@id/fab_add_item" />
 

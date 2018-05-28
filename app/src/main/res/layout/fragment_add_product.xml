@@ -9,11 +9,11 @@
         android:id="@+id/textView2"
         style="@style/FieldStyle"
         android:text="Product Name:"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editSupplierName"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editProductName"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editSupplierName"
+        android:id="@+id/editProductName"
         style="@style/editTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
@@ -23,45 +23,44 @@
         android:id="@+id/textView3"
         style="@style/FieldStyle"
         android:text="Sale Price:"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editSupplierAddress"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editSalePrice"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editSupplierAddress"
+        android:id="@+id/editSalePrice"
         style="@style/editTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/editSupplierName" />
+        app:layout_constraintTop_toBottomOf="@+id/editProductName" />
 
     <TextView
         android:id="@+id/textView4"
         style="@style/FieldStyle"
         android:text="In stock:"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editSupplierEMail"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editQuantity"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editSupplierEMail"
+        android:id="@+id/editQuantity"
         style="@style/editTextStyle"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/editSupplierAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/editSalePrice" />
 
     <TextView
         android:id="@+id/textView5"
         style="@style/FieldStyle"
         android:text="Supplier:"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editSupplierPhone"
+        app:layout_constraintBottom_toBottomOf="@+id/supplierSpinner"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/editSupplierPhone"
+    <Spinner
+        android:id="@+id/supplierSpinner"
         style="@style/editTextStyle"
-        android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/editSupplierEMail" />
+        app:layout_constraintTop_toBottomOf="@+id/editQuantity" />
 
     <android.support.constraint.Barrier
         android:id="@+id/barrier"
@@ -81,7 +80,7 @@
         app:layout_constraintEnd_toStartOf="@+id/add_supplier_btn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSupplierPhone" />
+        app:layout_constraintTop_toBottomOf="@+id/supplierSpinner" />
 
     <Button
         android:id="@+id/add_supplier_btn"
@@ -93,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/save_btn"
-        app:layout_constraintTop_toBottomOf="@+id/editSupplierPhone" />
+        app:layout_constraintTop_toBottomOf="@+id/supplierSpinner" />
 
 
 </android.support.constraint.ConstraintLayout>

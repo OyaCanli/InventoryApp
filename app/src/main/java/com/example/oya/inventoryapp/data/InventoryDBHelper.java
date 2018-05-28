@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.oya.inventoryapp.data.InventoryContract.ProductEntry;
-import com.example.oya.inventoryapp.data.InventoryContract.SupplierEntry;
+import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
 
 
 public class InventoryDBHelper extends SQLiteOpenHelper {
@@ -27,16 +27,17 @@ public class InventoryDBHelper extends SQLiteOpenHelper {
                 + ProductEntry.QUANTITY_IN_STOCK + " INTEGER NOT NULL DEFAULT 0, "
                 + ProductEntry.SUPPLIER_NAME + " TEXT);";
 
-        String SQL_CREATE_SUPPLIER_TABLE = "CREATE TABLE " + SupplierEntry.TABLE_NAME + " ("
-                + SupplierEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + SupplierEntry.SUPPLIER_NAME + " TEXT NOT NULL, "
-                + SupplierEntry.SUPPLIER_PHONE + " TEXT, "
-                + SupplierEntry.SUPPLIER_ADDRESS + " TEXT, "
-                + SupplierEntry.SUPPLIER_EMAIL + " TEXT, "
-                + SupplierEntry.SUPPLIER_CONTACT_PERSON + " TEXT);";
+        String SQL_CREATE_ENTERPRISE_TABLE = "CREATE TABLE " + EnterpriseEntry.TABLE_NAME + " ("
+                + EnterpriseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + EnterpriseEntry.ENTERPRISE_NAME + " TEXT NOT NULL, "
+                + EnterpriseEntry.ENTERPRISE_PHONE + " TEXT, "
+                + EnterpriseEntry.ENTERPRISE_ADDRESS + " TEXT, "
+                + EnterpriseEntry.ENTERPRISE_EMAIL + " TEXT, "
+                + EnterpriseEntry.ENTERPRISE_CONTACT_PERSON + " TEXT, "
+                + EnterpriseEntry.RELATION_TYPE + " TEXT);";
 
                 db.execSQL(SQL_CREATE_PRODUCTS_TABLE);
-                db.execSQL(SQL_CREATE_SUPPLIER_TABLE);
+                db.execSQL(SQL_CREATE_ENTERPRISE_TABLE);
 
     }
 

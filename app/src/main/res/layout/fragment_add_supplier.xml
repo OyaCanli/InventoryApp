@@ -8,7 +8,7 @@
     <TextView
         android:id="@+id/textView2"
         style="@style/FieldStyle"
-        android:text="Supplier Name:"
+        android:text="Name:"
         app:layout_constraintBaseline_toBaselineOf="@+id/editSupplierName"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -87,7 +87,7 @@
         tools:layout_editor_absoluteX="91dp" />
 
     <Button
-        android:id="@+id/save_supplier_btn"
+        android:id="@+id/save_enterprise_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

@@ -30,28 +30,32 @@ public final class InventoryContract {
         public final static String SUPPLIER_NAME = "supplierName";
     }
 
-    public static final class SupplierEntry implements BaseColumns {
+    public static final class EnterpriseEntry implements BaseColumns {
 
         //Type: INTEGER
         public final static String _ID = BaseColumns._ID;
 
         //Type: TEXT
-        public final static String TABLE_NAME = "suppliers";
+        public final static String TABLE_NAME = "enterprises";
 
         //Type: TEXT
-        public final static String SUPPLIER_NAME = "supplierName";
+        public final static String ENTERPRISE_NAME = "enterpriseName";
 
         //Type: TEXT
-        public final static String SUPPLIER_PHONE = "supplierPhone";
+        public final static String ENTERPRISE_PHONE = "enterprisePhone";
 
         //Type: TEXT
-        public final static String SUPPLIER_ADDRESS = "supplierAddress";
+        public final static String ENTERPRISE_ADDRESS = "enterpriseAddress";
 
         //Type: TEXT
-        public final static String SUPPLIER_EMAIL = "supplierEmail";
+        public final static String ENTERPRISE_EMAIL = "enterpriseEmail";
 
         //Type: TEXT
-        public final static String SUPPLIER_CONTACT_PERSON = "supplierContactPerson";
+        public final static String ENTERPRISE_CONTACT_PERSON = "enterpriseContactPerson";
+
+        //Type: TEXT
+        public final static String RELATION_TYPE = "relationType";
     }
+
 
 }

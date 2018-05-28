@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0D5146</color>
-    <color name="colorPrimaryDark">#00362D</color>
+    <color name="colorPrimary">#27556C</color>
+    <color name="colorPrimaryDark">#113C51</color>
     <color name="colorAccent">#FF5722</color>
     <color name="tabIndicator">#FFFF00</color>
+    <color name="fab_delivery">#28784D</color>
+    <color name="fab_acquisition">#AA3939</color>
 </resources>

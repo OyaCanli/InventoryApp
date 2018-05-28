@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ProductAdapter extends ArrayAdapter<Product> {
 
-    ArrayList<Product> productList = new ArrayList<>();
+    ArrayList<Product> productList;
 
     public ProductAdapter(@NonNull Context context, ArrayList<Product> list) {
         super(context, 0, list);
@@ -30,7 +30,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.list_item, parent, false);
+                    R.layout.list_item_product, parent, false);
         }
 
         Product currentProduct = getItem(position);
@@ -41,7 +41,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         TextView price_tv = listItemView.findViewById(R.id.list_item_price);
         price_tv.setText(String.valueOf(currentProduct.getSalePrice()));
 
-        return super.getView(position, convertView, parent);
+        return listItemView;
     }
 
     public void refreshAdapter(List<Product> newList){

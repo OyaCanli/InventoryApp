@@ -1,6 +1,6 @@
 <resources>
-    <dimen name="fab_margin">32dp</dimen>
-    <dimen name="fab_size">42dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
     <dimen name="margin_standard">16dp</dimen>
     <dimen name="half_margin">8dp</dimen>
     <dimen name="padding_standard">16dp</dimen>
