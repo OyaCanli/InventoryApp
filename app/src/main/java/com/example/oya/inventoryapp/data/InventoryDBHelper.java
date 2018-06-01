@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.oya.inventoryapp.data.InventoryContract.ProductEntry;
 import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
+import com.example.oya.inventoryapp.data.InventoryContract.TransactionEntry;
 
 
 public class InventoryDBHelper extends SQLiteOpenHelper {
@@ -23,7 +24,7 @@ public class InventoryDBHelper extends SQLiteOpenHelper {
         String SQL_CREATE_PRODUCTS_TABLE = "CREATE TABLE " + ProductEntry.TABLE_NAME + " ("
                 + ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ProductEntry.PRODUCT_NAME + " TEXT NOT NULL, "
-                + ProductEntry.SALE_PRICE + " REAL NOT NULL DEFAULT 0, "
+                + ProductEntry.SALE_PRICE + " REAL DEFAULT 0, "
                 + ProductEntry.QUANTITY_IN_STOCK + " INTEGER NOT NULL DEFAULT 0, "
                 + ProductEntry.SUPPLIER_NAME + " TEXT);";
 
@@ -36,8 +37,18 @@ public class InventoryDBHelper extends SQLiteOpenHelper {
                 + EnterpriseEntry.ENTERPRISE_CONTACT_PERSON + " TEXT, "
                 + EnterpriseEntry.RELATION_TYPE + " TEXT);";
 
+        String SQL_CREATE_TRANSACTIONS_TABLE = "CREATE TABLE " + TransactionEntry.TABLE_NAME + " ("
+                + TransactionEntry._ID  + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + TransactionEntry.ENTERPRISE_NAME + " TEXT NOT NULL, "
+                + TransactionEntry.PRODUCT_NAME + " TEXT NOT NULL, "
+                + TransactionEntry.QUANTITY + " INTEGER NOT NULL, "
+                + TransactionEntry.PRICE + " REAL, "
+                + TransactionEntry.TRANSACTION_DATE + " TEXT, "
+                + TransactionEntry.TRANSACTION_TYPE + " TEXT);";
+
                 db.execSQL(SQL_CREATE_PRODUCTS_TABLE);
                 db.execSQL(SQL_CREATE_ENTERPRISE_TABLE);
+                db.execSQL(SQL_CREATE_TRANSACTIONS_TABLE);
 
     }
 

@@ -58,4 +58,31 @@ public final class InventoryContract {
     }
 
 
+    public static final class TransactionEntry implements BaseColumns {
+
+        //Type: INTEGER
+        public final static String _ID = BaseColumns._ID;
+
+        //Type: TEXT
+        public final static String TABLE_NAME = "transactions";
+
+        //Type: TEXT
+        public final static String ENTERPRISE_NAME = "enterpriseName";
+
+        //Type: TEXT
+        public final static String PRODUCT_NAME = "productName";
+
+        //Type: TEXT
+        public final static String QUANTITY = "quantity";
+
+        //Type: TEXT
+        public final static String PRICE = "price";
+
+        //Type: TEXT
+        public final static String TRANSACTION_DATE = "transactionDate";
+
+        //Type: TEXT
+        public final static String TRANSACTION_TYPE = "transactionType";
+    }
+
 }

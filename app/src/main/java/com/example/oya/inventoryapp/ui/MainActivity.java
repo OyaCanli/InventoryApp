@@ -18,8 +18,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
-import com.example.oya.inventoryapp.Constants;
+import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.R;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
@@ -27,7 +28,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle toggle;
     private ConstraintLayout mConstraintLayout;
     private ConstraintSet mConstraintSet2;
+    private ConstraintSet mConstraintSet1;
     private FloatingActionButton fab_main;
+    private boolean fabsInClickedState = false;
+    private TextView hint_main_tv, hint_add_item_tv, hint_acquisition_tv, hint_delivery_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +52,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //Define constraint sets for a constraint set animation between idle and clicked states of fab buttons
-        ConstraintSet mConstraintSet1 = new ConstraintSet();
+        mConstraintSet1 = new ConstraintSet();
         mConstraintSet2 = new ConstraintSet();
         mConstraintLayout = findViewById(R.id.fab_default_state);
         mConstraintSet1.clone(mConstraintLayout);
         mConstraintSet2.clone(this, R.layout.fab_clicked_state);
 
-        //Find floating actions buttons
+        //Find floating actions buttons and hint textviews
         fab_main =  findViewById(R.id.fab_main);
         FloatingActionButton fab_add_product = findViewById(R.id.fab_add_item);
         FloatingActionButton fab_delivery = findViewById(R.id.fab_delivery);
         FloatingActionButton fab_acquisition = findViewById(R.id.fab_acquisition);
+        hint_main_tv = findViewById(R.id.hint_cancel);
+        hint_acquisition_tv = findViewById(R.id.hint_acquisition);
+        hint_add_item_tv = findViewById(R.id.hint_add_product);
+        hint_delivery_tv = findViewById(R.id.hint_Delivery);
         //Set clicklisteners on fabs
         fab_main.setOnClickListener(this);
         fab_add_product.setOnClickListener(this);
@@ -94,15 +102,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = v.getId();
         switch(id) {
             case R.id.fab_main: {
-                TransitionManager.beginDelayedTransition(mConstraintLayout, new MainActivity.MyTransition());
-                mConstraintSet2.applyTo(mConstraintLayout);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        fab_main.setImageResource(R.drawable.restart_white_32);
-
-                    }
-                }, 500);
+                if(!fabsInClickedState){
+                    showFoursFABs();
+                } else {
+                    showSingleFAB();
+                }
                 break;
             }
             case R.id.fab_add_item:{
@@ -111,8 +115,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .replace(R.id.container, addProductFrag)
                         .addToBackStack(null)
                         .commit();
+                showSingleFAB();
+                break;
+            }
+            case R.id.fab_acquisition:{
+                openRealizeTransactionFragment(Constants.ACQUISITION);
+                showSingleFAB();
+                break;
+            }
+            case R.id.fab_delivery:{
+                openRealizeTransactionFragment(Constants.DELIVERY);
+                showSingleFAB();
+                break;
             }
         }
+        fabsInClickedState ^= true;
+    }
+
+    private void showFoursFABs(){
+        TransitionManager.beginDelayedTransition(mConstraintLayout, new MainActivity.MyTransition());
+        hint_delivery_tv.setVisibility(View.VISIBLE);
+        hint_add_item_tv.setVisibility(View.VISIBLE);
+        hint_acquisition_tv.setVisibility(View.VISIBLE);
+        hint_main_tv.setVisibility(View.VISIBLE);
+        mConstraintSet2.applyTo(mConstraintLayout);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fab_main.setImageResource(R.drawable.restart_white_32);
+
+            }
+        }, 500);
+    }
+
+    private void showSingleFAB(){
+        TransitionManager.beginDelayedTransition(mConstraintLayout, new MainActivity.MyTransition());
+        hint_delivery_tv.setVisibility(View.GONE);
+        hint_add_item_tv.setVisibility(View.GONE);
+        hint_acquisition_tv.setVisibility(View.GONE);
+        hint_main_tv.setVisibility(View.GONE);
+        mConstraintSet1.applyTo(mConstraintLayout);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fab_main.setImageResource(R.drawable.baseline_add_white_24dp);
+
+            }
+        }, 500);
     }
 
     @Override
@@ -128,25 +177,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.suppliers:{
-                EnterpriseListFragment supplierListFrag = new EnterpriseListFragment();
-                Bundle args = new Bundle();
-                args.putString(Constants.RELATION_TYPE, Constants.SUPPLIER);
-                supplierListFrag.setArguments(args);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, supplierListFrag)
-                        .addToBackStack(null)
-                        .commit();
+                openEnterpriseListFragment(Constants.SUPPLIER);
                 break;
             }
             case R.id.clients:{
-                EnterpriseListFragment clientListFrag = new EnterpriseListFragment();
-                Bundle args = new Bundle();
-                args.putString(Constants.RELATION_TYPE, Constants.CLIENT);
-                clientListFrag.setArguments(args);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, clientListFrag)
-                        .addToBackStack(null)
-                        .commit();
+                openEnterpriseListFragment(Constants.CLIENT);
                 break;
             }
             case R.id.add_product:{
@@ -158,39 +193,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.add_supplier:{
-                AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
-                Bundle args = new Bundle();
-                args.putString(Constants.RELATION_TYPE, Constants.SUPPLIER);
-                addSupplierFrag.setArguments(args);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, addSupplierFrag)
-                        .addToBackStack(null)
-                        .commit();
+                openAddEnterPriseFragment(Constants.SUPPLIER);
                 break;
             }
             case R.id.add_client:{
-                AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
-                Bundle args = new Bundle();
-                args.putString(Constants.RELATION_TYPE, Constants.CLIENT);
-                addSupplierFrag.setArguments(args);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, addSupplierFrag)
-                        .addToBackStack(null)
-                        .commit();
+                openAddEnterPriseFragment(Constants.CLIENT);
                 break;
             }
             case R.id.new_delivery:{
-
+                openRealizeTransactionFragment(Constants.DELIVERY);
                 break;
             }
             case R.id.new_acquisition:{
-
+                openRealizeTransactionFragment(Constants.ACQUISITION);
+                break;
+            }
+            case R.id.transaction_list:{
+                TransactionListFragment transactionListFrag = new TransactionListFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, transactionListFrag)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openEnterpriseListFragment(String relationshipType){
+        EnterpriseListFragment supplierListFrag = new EnterpriseListFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.RELATION_TYPE, relationshipType);
+        supplierListFrag.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, supplierListFrag)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void openAddEnterPriseFragment(String relationType) {
+        AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.RELATION_TYPE, relationType);
+        addSupplierFrag.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, addSupplierFrag)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void openRealizeTransactionFragment(String transactionType){
+        RealizeTransactionFragment transactionFrag = new RealizeTransactionFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.TRANSACTION_TYPE, transactionType);
+        transactionFrag.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, transactionFrag)
+                .addToBackStack(null)
+                .commit();
     }
 
     //Custom transition used during the transition of constraint sets

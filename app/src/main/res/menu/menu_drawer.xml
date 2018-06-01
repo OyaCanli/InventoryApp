@@ -6,34 +6,37 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/products"
-            android:title="Products" />
+            android:title="@string/products" />
         <item
             android:id="@+id/suppliers"
-            android:title="Suppliers" />
+            android:title="@string/suppliers" />
         <item
             android:id="@+id/clients"
-            android:title="Clients" />
+            android:title="@string/clients" />
+        <item
+            android:id="@+id/transaction_list"
+            android:title="@string/transactions"/>
     </group>
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/add_product"
-            android:title="New product" />
+            android:title="@string/new_product" />
         <item
             android:id="@+id/add_supplier"
-            android:title="New Supplier" />
+            android:title="@string/new_supplier" />
         <item
             android:id="@+id/add_client"
-            android:title="New Client" />
+            android:title="@string/new_client" />
     </group>
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/new_delivery"
-            android:title="New delivery" />
+            android:title="@string/new_delivery" />
         <item
             android:id="@+id/new_acquisition"
-            android:title="New Acquisition" />
+            android:title="@string/new_acquisition" />
     </group>
 
 </menu>

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.oya.inventoryapp.Constants;
+import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.adapters.EnterpriseAdapter;
 import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
@@ -34,6 +34,7 @@ public class EnterpriseListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_listview, container, false);
         Bundle bundle = getArguments();
         mTypeOfRelationship = bundle.getString(Constants.RELATION_TYPE);
+        getActivity().setTitle(getString(R.string.all_enterprises, mTypeOfRelationship));
         //get the list of suppliers from the database
         ArrayList<Enterprise> enterpriseList = getAllSuppliersOrClients(mTypeOfRelationship);
         EnterpriseAdapter adapter = new EnterpriseAdapter(getActivity(), enterpriseList);

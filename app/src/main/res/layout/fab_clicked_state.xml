@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -41,5 +42,45 @@
         app:useCompatPadding="true"
         app:layout_constraintBottom_toTopOf="@id/fab_delivery"
         app:layout_constraintEnd_toStartOf="@id/fab_add_item" />
+
+    <TextView
+        android:id="@+id/hint_acquisition"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/acquisition"
+        app:layout_constraintEnd_toEndOf="@+id/fab_acquisition"
+        app:layout_constraintStart_toStartOf="@+id/fab_acquisition"
+        app:layout_constraintTop_toTopOf="@id/fab_acquisition" />
+
+    <TextView
+        android:id="@+id/hint_add_product"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/add_product"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/fab_add_item"
+        app:layout_constraintStart_toEndOf="@+id/fab_acquisition"
+        app:layout_constraintTop_toTopOf="@id/fab_add_item" />
+
+    <TextView
+        android:id="@+id/hint_Delivery"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/delivery"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/fab_delivery"
+        app:layout_constraintStart_toStartOf="@+id/fab_delivery"
+        app:layout_constraintTop_toTopOf="@+id/fab_delivery" />
+
+    <TextView
+        android:id="@+id/hint_cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/fab_main"
+        app:layout_constraintStart_toStartOf="@+id/fab_main"
+        app:layout_constraintTop_toTopOf="@+id/fab_main" />
 
 </android.support.constraint.ConstraintLayout>

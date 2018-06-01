@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.oya.inventoryapp.Constants;
+import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.data.InventoryDBHelper;
 import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
@@ -26,6 +26,7 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
     private EditText enterprisePhone_et;
     private EditText enterpriseContactPerson_et;
     private String mTypeOfRelationship;
+    private boolean mUserIsAddingAProduct;
 
     public AddEnterpriseFragment() {
     }
@@ -36,6 +37,9 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
         View rootView = inflater.inflate(R.layout.fragment_add_supplier, container, false);
         Bundle bundle = getArguments();
         mTypeOfRelationship = bundle.getString(Constants.RELATION_TYPE);
+        if(bundle.containsKey(Constants.REQUEST_CODE)){
+            mUserIsAddingAProduct = true;
+        }
         getActivity().setTitle(getString(R.string.add_client_or_suuplier, mTypeOfRelationship));
         enterpriseName_et = rootView.findViewById(R.id.editSupplierName);
         enterpriseAddress_et = rootView.findViewById(R.id.editSupplierAddress);
@@ -50,6 +54,9 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         saveSupplier();
+        if(mUserIsAddingAProduct){
+            Toast.makeText(getActivity(), "You can click BACK button to continue adding your product", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void saveSupplier(){
@@ -76,10 +83,10 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
         // Show a toast message depending on whether or not the insertion was successful
         if (newRowId == -1) {
             // If the row ID is -1, then there was an error with insertion.
-            Toast.makeText(getActivity(), "Error with saving supplier", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Error with saving", Toast.LENGTH_SHORT).show();
         } else {
             // Otherwise, the insertion was successful and we can display a toast with the row ID.
-            Toast.makeText(getActivity(), "Supplier saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entry is successfully saved ", Toast.LENGTH_SHORT).show();
         }
     }
 }

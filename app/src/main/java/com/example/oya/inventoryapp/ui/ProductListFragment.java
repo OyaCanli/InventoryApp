@@ -29,6 +29,7 @@ public class ProductListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_listview, container, false);
+        getActivity().setTitle(getString(R.string.all_products));
         //get the list of products from the database
         ArrayList<Product> mProductList = getAllProducts();
         ProductAdapter adapter = new ProductAdapter(getActivity(), mProductList);

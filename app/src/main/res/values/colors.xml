@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#113C51</color>
     <color name="colorAccent">#FF5722</color>
     <color name="tabIndicator">#FFFF00</color>
-    <color name="fab_delivery">#28784D</color>
-    <color name="fab_acquisition">#AA3939</color>
+    <color name="delivery">#28784D</color>
+    <color name="acquisition">#AA3939</color>
 </resources>
