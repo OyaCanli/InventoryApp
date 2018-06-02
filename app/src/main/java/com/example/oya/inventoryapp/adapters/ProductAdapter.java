@@ -39,7 +39,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         productName_tv.setText(currentProduct.getProductName());
 
         TextView price_tv = listItemView.findViewById(R.id.list_item_price);
-        price_tv.setText(String.valueOf(currentProduct.getSalePrice()));
+        price_tv.setText(String.valueOf(currentProduct.getQuantityInStock()));
 
         return listItemView;
     }

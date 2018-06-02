@@ -74,11 +74,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab_acquisition.setOnClickListener(this);
 
         //Add product list fragment as the default fragment
-        ProductListFragment productListFrag = new ProductListFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, productListFrag)
-                .addToBackStack(null)
-                .commit();
+        if(savedInstanceState == null) {
+            ProductListFragment productListFrag = new ProductListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, productListFrag)
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            fabsInClickedState = savedInstanceState.getBoolean(Constants.IS_FAB_CLICKED);
+            if(fabsInClickedState) showFourFABs();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(Constants.IS_FAB_CLICKED, fabsInClickedState);
     }
 
     @Override
@@ -103,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.fab_main: {
                 if(!fabsInClickedState){
-                    showFoursFABs();
+                    showFourFABs();
                 } else {
                     showSingleFAB();
                 }
@@ -132,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fabsInClickedState ^= true;
     }
 
-    private void showFoursFABs(){
+    private void showFourFABs(){
         TransitionManager.beginDelayedTransition(mConstraintLayout, new MainActivity.MyTransition());
         hint_delivery_tv.setVisibility(View.VISIBLE);
         hint_add_item_tv.setVisibility(View.VISIBLE);

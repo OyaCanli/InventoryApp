@@ -17,4 +17,6 @@ public final class Constants {
     public final static String REQUEST_CODE = "requestCode";
 
     public final static String ADD_PRODUCT_FRAGMENT = "addProductFragment";
+
+    public final static String IS_FAB_CLICKED = "isFabClicked";
 }

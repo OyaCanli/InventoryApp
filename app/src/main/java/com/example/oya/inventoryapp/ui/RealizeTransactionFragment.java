@@ -1,7 +1,5 @@
 package com.example.oya.inventoryapp.ui;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,10 +29,11 @@ import com.example.oya.inventoryapp.utils.DatabaseUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RealizeTransactionFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
+public class RealizeTransactionFragment extends Fragment implements View.OnClickListener,
+        AdapterView.OnItemSelectedListener, DatePickerFragment.MyOnDateSetListener{
 
     private String mTransactionType = null;
-    private static TextView date_tv; //TODO: find another solution for this. Perhaps an interface?
+    private TextView date_tv; //TODO: find another solution for this. Perhaps an interface?
     private ArrayList<String> enterpriseNames;
     private ArrayList<String> productNames;
     private String enterpriseChosen;
@@ -99,7 +97,7 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
     public void onClick(View v) {
         if(v.getId() == R.id.change_date_btn){
             DialogFragment newFragment = new DatePickerFragment();
-            newFragment.show(getFragmentManager(), "datePicker");
+            newFragment.show(getChildFragmentManager(), "datePicker");
         } else {
             saveTransactionToDatabase();
         }
@@ -218,29 +216,17 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
         } else{
             newQuantity = mQuantityInStock + quantity;
         }
+        //Update the quantity textview in the current fragment
+        quantity_in_stock_tv.setText(String.valueOf(mQuantityInStock));
+        //Update the quantity field of that product in the products table
         valuesForUpdate.put(ProductEntry.QUANTITY_IN_STOCK, newQuantity);
         String[] selectionArg = {productChosen};
         db.update(ProductEntry.TABLE_NAME, valuesForUpdate, ProductEntry.PRODUCT_NAME + "=?", selectionArg);
     }
 
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            mDate = "" + dayOfMonth + "/" + (month+1) + "/" + year;
-            date_tv.setText(mDate);
-        }
+    @Override
+    public void myOnDateChanged(String newDate) {
+        date_tv.setText(newDate);
     }
+
 }
