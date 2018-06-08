@@ -26,6 +26,7 @@ public class InventoryDBHelper extends SQLiteOpenHelper {
                 + ProductEntry.PRODUCT_NAME + " TEXT NOT NULL, "
                 + ProductEntry.SALE_PRICE + " REAL DEFAULT 0, "
                 + ProductEntry.QUANTITY_IN_STOCK + " INTEGER NOT NULL DEFAULT 0, "
+                + ProductEntry.IMAGE_FILE_PATH + " TEXT, "
                 + ProductEntry.SUPPLIER_NAME + " TEXT);";
 
         String SQL_CREATE_ENTERPRISE_TABLE = "CREATE TABLE " + EnterpriseEntry.TABLE_NAME + " ("

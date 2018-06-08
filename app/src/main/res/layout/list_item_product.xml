@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,23 +7,64 @@
     android:padding="@dimen/half_padding">
 
     <TextView
-        android:id="@+id/list_item_product_name"
+        android:id="@+id/product_item_product_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        tools:text="product name"
+        android:layout_marginTop="@dimen/half_margin"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/product_item_image"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="product name" />
 
     <TextView
-        android:id="@+id/list_item_price"
+        android:id="@+id/product_item_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        tools:text="5£"
+        app:layout_constraintStart_toEndOf="@+id/product_item_image"
+        app:layout_constraintTop_toBottomOf="@+id/product_item_product_name"
+        tools:text="5,50£" />
+
+    <ImageView
+        android:id="@+id/product_item_image"
+        android:layout_width="@dimen/product_item_image_height"
+        android:layout_height="@dimen/product_item_image_height"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/half_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_item_product_name" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/alert_light_frame" />
+
+    <TextView
+        android:id="@+id/product_item_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toEndOf="@+id/product_item_image"
+        app:layout_constraintTop_toBottomOf="@+id/product_item_price"
+        tools:text="In stock: 10" />
+
+    <TextView
+        android:id="@+id/product_item_command_btn"
+        android:layout_width="wrap_content"
+        android:background="@drawable/rounded_corners_order"
+        android:text="@string/order"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/product_item_button_style" />
+
+    <TextView
+        android:id="@+id/product_item_sale_btn"
+        android:layout_width="0dp"
+        style="@style/product_item_button_style"
+        android:background="@drawable/rounded_corners_sale"
+        android:text="@string/sale"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/product_item_command_btn"
+        app:layout_constraintTop_toBottomOf="@+id/product_item_command_btn" />
+
 </android.support.constraint.ConstraintLayout>

@@ -1,11 +1,16 @@
 package com.example.oya.inventoryapp.ui;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +18,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.oya.inventoryapp.data.InventoryContract;
 import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.data.InventoryDBHelper;
 import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
 
-public class AddEnterpriseFragment extends Fragment implements View.OnClickListener{
+public class AddEnterpriseFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor>{
 
     private EditText enterpriseName_et;
     private EditText enterpriseAddress_et;
@@ -27,6 +33,7 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
     private EditText enterpriseContactPerson_et;
     private String mTypeOfRelationship;
     private boolean mUserIsAddingAProduct;
+    private Uri mCurrentEnterpriseUri;
 
     public AddEnterpriseFragment() {
     }
@@ -40,7 +47,22 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
         if(bundle.containsKey(Constants.REQUEST_CODE)){
             mUserIsAddingAProduct = true;
         }
-        getActivity().setTitle(getString(R.string.add_client_or_suuplier, mTypeOfRelationship));
+        String uriString = null;
+        if(bundle.containsKey(Constants.ENTERPRISE_URI)){
+            uriString = bundle.getString(Constants.ENTERPRISE_URI);
+        }
+        if(uriString != null){
+            mCurrentEnterpriseUri = Uri.parse(uriString);
+        }
+
+        //Set the title that corresponds to the fragment
+        if(mCurrentEnterpriseUri == null){
+            getActivity().setTitle(getString(R.string.add_client_or_suuplier, mTypeOfRelationship));
+        } else {
+            getActivity().setTitle(getString(R.string.edit_client_or_suuplier, mTypeOfRelationship));
+            getLoaderManager().initLoader(Constants.SINGLE_ENTERPRISE_LOADER, null, this);
+        }
+
         enterpriseName_et = rootView.findViewById(R.id.editSupplierName);
         enterpriseAddress_et = rootView.findViewById(R.id.editSupplierAddress);
         enterpriseEmail_et = rootView.findViewById(R.id.editSupplierEMail);
@@ -88,5 +110,42 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
             // Otherwise, the insertion was successful and we can display a toast with the row ID.
             Toast.makeText(getActivity(), "Entry is successfully saved ", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        return new CursorLoader(getActivity(), mCurrentEnterpriseUri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+        if (cursor == null || cursor.getCount() < 1) {
+            return;
+        }
+        if (cursor.moveToFirst()) {
+            int enterpriseNameColumnIndex = cursor.getColumnIndex(InventoryContract.EnterpriseEntry.ENTERPRISE_NAME);
+            int contactPersonColumnIndex = cursor.getColumnIndex(InventoryContract.EnterpriseEntry.ENTERPRISE_CONTACT_PERSON);
+            int phoneColumnIndex = cursor.getColumnIndex(InventoryContract.EnterpriseEntry.ENTERPRISE_PHONE);
+            int addressColumnIndex = cursor.getColumnIndex(EnterpriseEntry.ENTERPRISE_ADDRESS);
+            int eMailColumnIndex = cursor.getColumnIndex(EnterpriseEntry.ENTERPRISE_EMAIL);
+
+            String enterpriseName = cursor.getString(enterpriseNameColumnIndex);
+            String contactPerson = cursor.getString(contactPersonColumnIndex);
+            final String phone = cursor.getString(phoneColumnIndex);
+            String address = cursor.getString(addressColumnIndex);
+            String eMail = cursor.getString(eMailColumnIndex);
+
+            enterpriseName_et.setText(enterpriseName);
+            enterpriseAddress_et.setText(address);
+            enterpriseEmail_et.setText(eMail);
+            enterprisePhone_et.setText(phone);
+            enterpriseContactPerson_et.setText(contactPerson);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+
     }
 }

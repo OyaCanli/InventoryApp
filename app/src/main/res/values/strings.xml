@@ -5,6 +5,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="add_client_or_suuplier">Add %1$s</string>
+    <string name="edit_client_or_suuplier">Edit %1$s</string>
     <string name="no_enterprise_found">No %1$s found</string>
     <string name="supplierOrEnterPrise">%1$s name:</string>
     <string name="stock_not_enough_warning">You don\'t have enough stock for this delivery. You have only %1$d items.</string>
@@ -14,7 +15,7 @@
     <string name="suppliers">Suppliers</string>
     <string name="clients">Clients</string>
     <string name="transactions">Transactions</string>
-    <string name="new_product">New product</string>
+    <string name="new_product">New Product</string>
     <string name="new_supplier">New Supplier</string>
     <string name="new_client">New Client</string>
     <string name="new_delivery">New Delivery</string>
@@ -31,7 +32,16 @@
     <string name="product_saved_successfully">Product saved with row id:</string>
     <string name="no_supplier_chosen">You didn\'t chose a supplier</string>
     <string name="product_name_empty">Product name cannot be empty</string>
-    <string name="acquisition_title">Acquisition of %1$d items from the supplier %2$s</string>
-    <string name="delivery_title">Delivery of %1$d items to client %2$s</string>
+    <string name="acquisition_title">Acquisition of %1$d %2$s from the supplier %3$s</string>
+    <string name="delivery_title">Delivery of %1$d %2$s to the client %3$s</string>
+    <string name="in_stock">In stock: %1$d</string>
+    <string name="edit_product">Edit Product</string>
+    <string name="order">Order</string>
+    <string name="sale">Sale</string>
+
+    <string-array name="dialog_options">
+        <item>Take an image</item>
+        <item>Choose from gallery</item>
+    </string-array>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.example.oya.inventoryapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -67,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hint_acquisition_tv = findViewById(R.id.hint_acquisition);
         hint_add_item_tv = findViewById(R.id.hint_add_product);
         hint_delivery_tv = findViewById(R.id.hint_Delivery);
-        //Set clicklisteners on fabs
+
+        //Set click listeners on fabs
         fab_main.setOnClickListener(this);
         fab_add_product.setOnClickListener(this);
         fab_delivery.setOnClickListener(this);
@@ -130,12 +132,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.fab_acquisition:{
-                openRealizeTransactionFragment(Constants.ACQUISITION);
+                openAddTransactionFragment(Constants.ACQUISITION);
                 showSingleFAB();
                 break;
             }
             case R.id.fab_delivery:{
-                openRealizeTransactionFragment(Constants.DELIVERY);
+                openAddTransactionFragment(Constants.DELIVERY);
                 showSingleFAB();
                 break;
             }
@@ -212,11 +214,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.new_delivery:{
-                openRealizeTransactionFragment(Constants.DELIVERY);
+                openAddTransactionFragment(Constants.DELIVERY);
                 break;
             }
             case R.id.new_acquisition:{
-                openRealizeTransactionFragment(Constants.ACQUISITION);
+                openAddTransactionFragment(Constants.ACQUISITION);
                 break;
             }
             case R.id.transaction_list:{
@@ -255,8 +257,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
-    private void openRealizeTransactionFragment(String transactionType){
-        RealizeTransactionFragment transactionFrag = new RealizeTransactionFragment();
+    private void openAddTransactionFragment(String transactionType){
+        AddTransactionFragment transactionFrag = new AddTransactionFragment();
         Bundle args = new Bundle();
         args.putString(Constants.TRANSACTION_TYPE, transactionType);
         transactionFrag.setArguments(args);
@@ -291,5 +293,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

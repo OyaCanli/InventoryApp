@@ -3,6 +3,7 @@ package com.example.oya.inventoryapp.ui;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,22 +21,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.oya.inventoryapp.R;
+import com.example.oya.inventoryapp.data.InventoryContract;
 import com.example.oya.inventoryapp.data.InventoryContract.ProductEntry;
 import com.example.oya.inventoryapp.data.InventoryContract.TransactionEntry;
 import com.example.oya.inventoryapp.data.InventoryDBHelper;
+import com.example.oya.inventoryapp.model.Transaction;
 import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.utils.DatabaseUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RealizeTransactionFragment extends Fragment implements View.OnClickListener,
+public class AddTransactionFragment extends Fragment implements View.OnClickListener,
         AdapterView.OnItemSelectedListener, DatePickerFragment.MyOnDateSetListener{
 
     private String mTransactionType = null;
-    private TextView date_tv; //TODO: find another solution for this. Perhaps an interface?
+    private TextView date_tv;
     private ArrayList<String> enterpriseNames;
     private ArrayList<String> productNames;
+    private ArrayList<Integer> quantitiesList = new ArrayList<>();
     private String enterpriseChosen;
     private String productChosen;
     private EditText quantity_et;
@@ -43,27 +47,40 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
     private static String mDate;
     private TextView quantity_in_stock_tv;
     private int mQuantityInStock;
+    private int mProductPosition;
 
-    public RealizeTransactionFragment() {
+    public AddTransactionFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
+
         /*This fragment is used both for acquisitions and deliveries.
         So we need to retrieve the info about the transaction type from the bundle*/
+
         Bundle bundle = getArguments();
-        if(bundle != null) mTransactionType = bundle.getString(Constants.TRANSACTION_TYPE);
+        if(bundle != null){
+            mTransactionType = bundle.getString(Constants.TRANSACTION_TYPE);
+        }
+        if(bundle.containsKey(Constants.PRODUCT_POSITION)) {
+            mProductPosition = bundle.getInt(Constants.PRODUCT_POSITION);
+        }
+
+        //Set the corresponding title: New Acquisition or New Delivery
         getActivity().setTitle(getString(R.string.new_transaction, mTransactionType));
-        //Set clicklisteners to buttons
+
+        //Set clickListeners to buttons
         Button changeDate_btn = rootView.findViewById(R.id.change_date_btn);
         changeDate_btn.setOnClickListener(this);
         Button saveTransaction_btn = rootView.findViewById(R.id.save_transaction_btn);
         saveTransaction_btn.setOnClickListener(this);
+
         //Set the date to current date by default
         date_tv = rootView.findViewById(R.id.transaction_date_tv);
         setDateToTodayByDefault();
+
         //If it is a acquisition we'll write supplier name, if it is a delivery we'll write client name
         TextView supplierOrClient_tv = rootView.findViewById(R.id.transaction_enterprise_tv);
         String relationshipType = null;
@@ -73,23 +90,33 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
             relationshipType = Constants.CLIENT;
         }
         supplierOrClient_tv.setText(getString(R.string.supplierOrEnterPrise, relationshipType));
+
+        //Set some views
         quantity_et = rootView.findViewById(R.id.transaction_quantity_et);
         price_et = rootView.findViewById(R.id.transaction_price_et);
         quantity_in_stock_tv = rootView.findViewById(R.id.transaction_quantity_in_stock);
+
         //Set enterprise spinner
         Spinner enterprise_spin = rootView.findViewById(R.id.enterprise_spinner);
         enterprise_spin.setOnItemSelectedListener(this);
-        enterpriseNames = DatabaseUtils.getEnterpriseNames(getActivity(),relationshipType);
+        enterpriseNames = DatabaseUtils.getEnterpriseNames(getActivity(), relationshipType);
         ArrayAdapter<String> enterpriseSpinAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, enterpriseNames);
         enterpriseSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         enterprise_spin.setAdapter(enterpriseSpinAdapter);
+
         //Set product spinner
         Spinner product_spin = rootView.findViewById(R.id.product_spinner);
         product_spin.setOnItemSelectedListener(this);
-        productNames = DatabaseUtils.getProductNames(getActivity());
+        productNames = getProductNames();
         ArrayAdapter<String> productSpinAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, productNames);
         productSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         product_spin.setAdapter(productSpinAdapter);
+
+        //If user clicked this for a specific product set that product selected on the spinner
+        if(mProductPosition != 0) {
+            product_spin.setSelection(mProductPosition);
+        }
+
         return rootView;
     }
 
@@ -101,7 +128,27 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
         } else {
             saveTransactionToDatabase();
         }
+    }
 
+    private ArrayList<String> getProductNames(){
+        ArrayList<String> productList = new ArrayList<>();
+        //I need only product name column for this list
+        String[] projection = {ProductEntry.PRODUCT_NAME, ProductEntry.QUANTITY_IN_STOCK};
+        Cursor cursor = getActivity().getContentResolver().query(InventoryContract.ProductEntry.CONTENT_URI, projection, null, null, null);
+
+        int productNameColumnIndex = cursor.getColumnIndex(ProductEntry.PRODUCT_NAME);
+        int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.QUANTITY_IN_STOCK);
+
+        while (cursor.moveToNext()) {
+            //Fill productList array with product names
+            String productName = cursor.getString(productNameColumnIndex);
+            productList.add(productName);
+            //Fill quantitiesOfAllProducts list with the quantities of each product
+            int quantityInStock = cursor.getInt(quantityColumnIndex);
+            quantitiesList.add(quantityInStock);
+        }
+        cursor.close();
+        return productList;
     }
 
     private void setDateToTodayByDefault(){
@@ -122,7 +169,7 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
             }
             case R.id.product_spinner:{
                 productChosen = productNames.get(position);
-                mQuantityInStock = getQuantityInStockOfTheChosenProduct(productChosen);
+                mQuantityInStock = quantitiesList.get(position);
                 quantity_in_stock_tv.setText(String.valueOf(mQuantityInStock));
                 break;
             }
@@ -133,33 +180,8 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
-    private int getQuantityInStockOfTheChosenProduct(String productName){
-        InventoryDBHelper mDbHelper = new InventoryDBHelper(getActivity());
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        //I need only quantity column for this list
-        String[] projection = {ProductEntry.QUANTITY_IN_STOCK};
-        String[] selectionArgs = {productName};
-
-        Cursor cursor = db.query(
-                ProductEntry.TABLE_NAME,   // The table to query
-                projection,            // The columns to return
-                ProductEntry.PRODUCT_NAME + "=?", // The columns for the WHERE clause
-                selectionArgs,                  // The values for the WHERE clause
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);                   // The sort order
-
-        cursor.moveToFirst();
-
-        int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.QUANTITY_IN_STOCK);
-        int quantityInStock = cursor.getInt(quantityColumnIndex);
-        cursor.close();
-        return quantityInStock;
-    }
-
     private void saveTransactionToDatabase(){
-
+        //Check the validity of quantity
         int quantity;
         try{
             quantity = Integer.valueOf(quantity_et.getText().toString().trim());
@@ -171,12 +193,12 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
             Toast.makeText(getActivity(), R.string.quantity_should_be_positive, Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //If this is a delivery, quantity to be delivered cannot be more than the quantity in stock
         if(mTransactionType.equals(Constants.DELIVERY) && (quantity > mQuantityInStock)) {
             Toast.makeText(getActivity(), getString(R.string.stock_not_enough_warning, mQuantityInStock), Toast.LENGTH_SHORT).show();
             return;
         }
-
+        //Check the validity of price
         float price;
         try{
             price = Float.valueOf(price_et.getText().toString().trim());
@@ -184,9 +206,6 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
             Toast.makeText(getActivity(), R.string.price_should_not_contain_text, Toast.LENGTH_SHORT).show();
             return;
         }
-
-        InventoryDBHelper mDbHelper = new InventoryDBHelper(getActivity());
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(TransactionEntry.ENTERPRISE_NAME, enterpriseChosen);
@@ -196,16 +215,12 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
         values.put(TransactionEntry.TRANSACTION_DATE, mDate);
         values.put(TransactionEntry.TRANSACTION_TYPE, mTransactionType);
 
-        // Insert a new row for pet in the database, returning the ID of that new row.
-        long newRowId = db.insert(TransactionEntry.TABLE_NAME, null, values);
-
-        // Show a toast message depending on whether or not the insertion was successful
-        if (newRowId == -1) {
-            // If the row ID is -1, then there was an error with insertion.
-            Toast.makeText(getActivity(), "Error with saving product", Toast.LENGTH_SHORT).show();
+        //insert the transaction to database with the help of content provider
+        Uri newUri = getActivity().getContentResolver().insert(TransactionEntry.CONTENT_URI, values);
+        if (newUri == null) {
+            Toast.makeText(getActivity(), "Error saving transaction", Toast.LENGTH_SHORT).show();
         } else {
-            // Otherwise, the insertion was successful and we can display a toast with the row ID.
-            Toast.makeText(getActivity(), "Product saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Transaction report saved successfully", Toast.LENGTH_SHORT).show();
         }
 
         //Transactions should update the quantity in the products table as well.
@@ -217,15 +232,26 @@ public class RealizeTransactionFragment extends Fragment implements View.OnClick
             newQuantity = mQuantityInStock + quantity;
         }
         //Update the quantity textview in the current fragment
-        quantity_in_stock_tv.setText(String.valueOf(mQuantityInStock));
+        quantity_in_stock_tv.setText(String.valueOf(newQuantity));
         //Update the quantity field of that product in the products table
         valuesForUpdate.put(ProductEntry.QUANTITY_IN_STOCK, newQuantity);
         String[] selectionArg = {productChosen};
-        db.update(ProductEntry.TABLE_NAME, valuesForUpdate, ProductEntry.PRODUCT_NAME + "=?", selectionArg);
+
+        int rowsAffected = getActivity().getContentResolver().update(ProductEntry.CONTENT_URI, valuesForUpdate, ProductEntry.PRODUCT_NAME + "=?", selectionArg);
+        if (rowsAffected == 0) {
+            // If no rows were affected, then there was an error with the update.
+            Toast.makeText(getActivity(), "Error updating quantity",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the update was successful and we can display a toast.
+            Toast.makeText(getActivity(), "Quantity updated successfully",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void myOnDateChanged(String newDate) {
+        mDate = newDate;
         date_tv.setText(newDate);
     }
 

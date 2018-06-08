@@ -37,4 +37,20 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <style name="buttonStyle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:paddingStart">@dimen/half_padding</item>
+        <item name="android:paddingEnd">@dimen/half_padding</item>
+    </style>
+
+    <style name="product_item_button_style">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:layout_marginTop">@dimen/half_margin</item>
+        <item name="android:padding">@dimen/half_padding</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
 </resources>
