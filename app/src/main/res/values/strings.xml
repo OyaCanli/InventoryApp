@@ -46,6 +46,7 @@
     <string name="enterprise_successfully_saved">Entry is successfully saved</string>
     <string name="error_updating">Error updating</string>
     <string name="successfully_updated">Successfully updated</string>
+    <string name="delete">Delete</string>
 
     <string-array name="dialog_options">
         <item>Take an image</item>

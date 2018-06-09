@@ -25,6 +25,9 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -69,13 +72,14 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     Uri mPhotoURI;
 
     public AddProductFragment() {
+        setHasOptionsMenu(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_product, container, false);
-
+        setHasOptionsMenu(true);
         //Find views
         productName_et = rootView.findViewById(R.id.editProductName);
         salePrice_et = rootView.findViewById(R.id.editSalePrice);
@@ -105,6 +109,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         //Set the title that corresponds to the fragment
         if (mCurrentProductUri == null) {
             getActivity().setTitle(getString(R.string.add_product));
+            getActivity().invalidateOptionsMenu();
         } else {
             getActivity().setTitle(getString(R.string.edit_product));
             getLoaderManager().initLoader(Constants.SINGLE_PRODUCT_LOADER, null, this);
@@ -113,6 +118,63 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         return rootView;
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (mCurrentProductUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_add_product, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_delete){
+            openAlertDialogForDelete();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void openAlertDialogForDelete() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Theme_AppCompat_DayNight_Dialog);
+        builder.setMessage("Do you want to delete this item from the database?");
+        builder.setPositiveButton("Yes, delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteProduct();
+                getActivity().onBackPressed();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        builder.create();
+        builder.show();
+    }
+
+    private void deleteProduct(){
+        if(mCurrentProductUri != null){
+            int rowsDeleted = getActivity().getContentResolver().delete(mCurrentProductUri, null, null);
+            // Show a toast message depending on whether or not the delete was successful.
+            if (rowsDeleted == 0) {
+                // If no rows were deleted, then there was an error with the delete.
+                Toast.makeText(getActivity(), "Error during delete",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the delete was successful and we can display a toast.
+                Toast.makeText(getActivity(), "product successfully deleted",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     public void onClick(View v) {
