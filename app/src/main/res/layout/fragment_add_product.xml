@@ -8,7 +8,7 @@
     <TextView
         android:id="@+id/textView2"
         style="@style/FieldStyle"
-        android:text="Product Name:"
+        android:text="@string/product_name"
         app:layout_constraintBaseline_toBaselineOf="@+id/editProductName"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -24,7 +24,7 @@
     <TextView
         android:id="@+id/textView3"
         style="@style/FieldStyle"
-        android:text="Sale Price:"
+        android:text="@string/sale_price"
         app:layout_constraintBaseline_toBaselineOf="@+id/editSalePrice"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -38,7 +38,7 @@
     <TextView
         android:id="@+id/textView4"
         style="@style/FieldStyle"
-        android:text="In stock:"
+        android:text="@string/in_stock_alone"
         app:layout_constraintBaseline_toBaselineOf="@+id/editQuantity"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -53,7 +53,7 @@
     <TextView
         android:id="@+id/textView5"
         style="@style/FieldStyle"
-        android:text="Supplier:"
+        android:text="@string/supplier"
         app:layout_constraintBottom_toBottomOf="@+id/supplierSpinner"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -78,7 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_standard"
-        android:text="Save"
+        android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/product_details_gallery_image" />
@@ -113,7 +113,7 @@
         android:id="@+id/textView"
         style="@style/FieldStyle"
         android:layout_marginTop="@dimen/margin_standard"
-        android:text="Add image:"
+        android:text="@string/add_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_supplier_btn" />
 

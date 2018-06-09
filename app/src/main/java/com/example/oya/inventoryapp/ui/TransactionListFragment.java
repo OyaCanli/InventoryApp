@@ -22,7 +22,7 @@ import com.example.oya.inventoryapp.utils.Constants;
 public class TransactionListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>{
 
-    TransactionsCursorAdapter mCursorAdapter;
+    private TransactionsCursorAdapter mCursorAdapter;
 
     public TransactionListFragment() {
     }
@@ -36,7 +36,7 @@ public class TransactionListFragment extends Fragment implements
         ListView listView = rootView.findViewById(R.id.list);
         listView.setAdapter(mCursorAdapter);
         TextView empty_tv = rootView.findViewById(R.id.empty_view);
-        empty_tv.setText("No transactions found");
+        empty_tv.setText(R.string.no_transactions_found);
         listView.setEmptyView(empty_tv);
         getLoaderManager().initLoader(Constants.TRANSACTION_LOADER_ID, null, this);
         return rootView;

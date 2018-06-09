@@ -4,7 +4,7 @@
     tools:showIn="navigation_view">
 
     <item android:id="@+id/see_all"
-        android:title="SEE ALL:">
+        android:title="@string/see_all">
         <menu>
             <item
                 android:id="@+id/products"
@@ -23,7 +23,7 @@
 
     <item
         android:id="@+id/add_item"
-        android:title="ADD:">
+        android:title="@string/add">
         <menu>
             <item
                 android:id="@+id/add_product"
@@ -39,7 +39,7 @@
 
     <item
         android:id="@+id/new_transaction"
-        android:title="NEW TRANSACTION:">
+        android:title="@string/new_transaction">
         <menu>
             <item
                 android:id="@+id/new_delivery"

@@ -8,11 +8,11 @@ public final class InventoryContract {
 
     public static final String AUTHORITY = "com.example.oya.inventoryapp";
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     public static final String PATH_PRODUCTS = "products";
 
-    public static final String PATH_ENTERPRICES = "enterprises";
+    static final String PATH_ENTERPRISES = "enterprises";
 
     public static final String PATH_TRANSACTIONS = "transactions";
 
@@ -57,12 +57,12 @@ public final class InventoryContract {
     public static final class EnterpriseEntry implements BaseColumns {
 
         public static final String CONTENT_LIST_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_ENTERPRICES;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_ENTERPRISES;
 
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_ENTERPRICES;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_ENTERPRISES;
 
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_ENTERPRICES);
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_ENTERPRISES);
 
         //Type: INTEGER
         public final static String _ID = BaseColumns._ID;

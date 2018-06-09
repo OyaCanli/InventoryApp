@@ -24,7 +24,7 @@ public final class BitmapUtils {
         );
     }
 
-    public static boolean deleteImageFile(Context context, String imagePath) {
+    public static void deleteImageFile(Context context, String imagePath) {
         // Get the file
         File imageFile = new File(imagePath);
         // Delete the image
@@ -33,6 +33,5 @@ public final class BitmapUtils {
         if (!deleted) {
             Toast.makeText(context, "Error during delete", Toast.LENGTH_SHORT).show();
         }
-        return deleted;
     }
 }

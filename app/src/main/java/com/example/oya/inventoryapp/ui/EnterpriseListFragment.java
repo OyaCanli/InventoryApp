@@ -2,7 +2,6 @@ package com.example.oya.inventoryapp.ui;
 
 import android.content.ContentUris;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +13,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,13 +21,9 @@ import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.adapters.EnterpriseCursorAdapter;
 import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
-import com.example.oya.inventoryapp.data.InventoryDBHelper;
-import com.example.oya.inventoryapp.model.Enterprise;
-
-import java.util.ArrayList;
 
 public class EnterpriseListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor>, EnterpriseCursorAdapter.ItemClickListener{
 
     private String mTypeOfRelationship;
     private EnterpriseCursorAdapter mCursorAdapter;
@@ -46,30 +40,28 @@ public class EnterpriseListFragment extends Fragment implements
         getActivity().setTitle(getString(R.string.all_enterprises, mTypeOfRelationship));
         //get the list of suppliers from the database
 
-        mCursorAdapter = new EnterpriseCursorAdapter(getActivity(), null);
+        mCursorAdapter = new EnterpriseCursorAdapter(getActivity(), null, this);
         ListView listView = rootView.findViewById(R.id.list);
         listView.setAdapter(mCursorAdapter);
         TextView empty_tv = rootView.findViewById(R.id.empty_view);
         empty_tv.setText(getString(R.string.no_enterprise_found, mTypeOfRelationship));
         listView.setEmptyView(empty_tv);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO: check the problem with this
-                AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
-                Bundle args = new Bundle();
-                args.putString(Constants.RELATION_TYPE, mTypeOfRelationship);
-                Uri currentEnterpriseUri = ContentUris.withAppendedId(InventoryContract.ProductEntry.CONTENT_URI, id);
-                args.putString(Constants.ENTERPRISE_URI, currentEnterpriseUri.toString());
-                addSupplierFrag.setArguments(args);
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.container, addSupplierFrag)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
         getLoaderManager().initLoader(Constants.ENTERPRISE_LOADER_ID, null, this);
         return rootView;
+    }
+
+    @Override
+    public void onItemClicked(long id) {
+        AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.RELATION_TYPE, mTypeOfRelationship);
+        Uri currentEnterpriseUri = ContentUris.withAppendedId(InventoryContract.EnterpriseEntry.CONTENT_URI, id);
+        args.putString(Constants.ENTERPRISE_URI, currentEnterpriseUri.toString());
+        addSupplierFrag.setArguments(args);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, addSupplierFrag)
+                .addToBackStack(null)
+                .commit();
     }
 
     @NonNull
@@ -92,4 +84,5 @@ public class EnterpriseListFragment extends Fragment implements
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
+
 }

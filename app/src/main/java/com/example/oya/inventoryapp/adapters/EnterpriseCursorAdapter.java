@@ -17,8 +17,11 @@ import com.example.oya.inventoryapp.data.InventoryContract;
 
 public class EnterpriseCursorAdapter extends CursorAdapter {
 
-    public EnterpriseCursorAdapter(@NonNull Context context, Cursor cursor) {
+    final ItemClickListener mCallback;
+
+    public EnterpriseCursorAdapter(@NonNull Context context, Cursor cursor, ItemClickListener listener) {
         super(context, cursor, 0);
+        mCallback = listener;
     }
 
     @Override
@@ -31,6 +34,7 @@ public class EnterpriseCursorAdapter extends CursorAdapter {
         TextView supplierName_tv = view.findViewById(R.id.list_item_supplier_name);
         TextView contact_person_tv = view.findViewById(R.id.list_item_supplier_contact_person);
         ImageButton phone_btn = view.findViewById(R.id.enterprise_item_phone_button);
+        View container = view.findViewById(R.id.enterprise_item_container);
 
         int enterpriseNameColumnIndex = cursor.getColumnIndex(InventoryContract.EnterpriseEntry.ENTERPRISE_NAME);
         int contactPersonColumnIndex = cursor.getColumnIndex(InventoryContract.EnterpriseEntry.ENTERPRISE_CONTACT_PERSON);
@@ -50,5 +54,18 @@ public class EnterpriseCursorAdapter extends CursorAdapter {
             }
         });
 
+        final int position = cursor.getPosition();
+        container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                long id = mCursor.getLong(mCursor.getColumnIndex(InventoryContract.EnterpriseEntry._ID));
+                mCallback.onItemClicked(id);
+            }
+        });
+    }
+
+    public interface ItemClickListener{
+        void onItemClicked(long id);
     }
 }

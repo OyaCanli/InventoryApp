@@ -1,8 +1,8 @@
 package com.example.oya.inventoryapp.ui;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,18 +11,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.oya.inventoryapp.data.InventoryContract;
-import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.R;
-import com.example.oya.inventoryapp.data.InventoryDBHelper;
+import com.example.oya.inventoryapp.data.InventoryContract;
 import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
+import com.example.oya.inventoryapp.utils.Constants;
 
 public class AddEnterpriseFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -36,12 +39,14 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
     private Uri mCurrentEnterpriseUri;
 
     public AddEnterpriseFragment() {
+        setHasOptionsMenu(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_enterpriser, container, false);
+        setHasOptionsMenu(true);
         Bundle bundle = getArguments();
         mTypeOfRelationship = bundle.getString(Constants.RELATION_TYPE);
         if(bundle.containsKey(Constants.REQUEST_CODE)){
@@ -58,6 +63,7 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
         //Set the title that corresponds to the fragment
         if(mCurrentEnterpriseUri == null){
             getActivity().setTitle(getString(R.string.add_client_or_suuplier, mTypeOfRelationship));
+            getActivity().invalidateOptionsMenu();
         } else {
             getActivity().setTitle(getString(R.string.edit_client_or_suuplier, mTypeOfRelationship));
             getLoaderManager().initLoader(Constants.SINGLE_ENTERPRISE_LOADER, null, this);
@@ -114,13 +120,72 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
                 Toast.makeText(getActivity(), R.string.successfully_updated, Toast.LENGTH_SHORT).show();
             }
         }
+    }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (mCurrentEnterpriseUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_with_delete, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_delete){
+            openAlertDialogForDelete();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openAlertDialogForDelete() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Theme_AppCompat_DayNight_Dialog);
+        builder.setMessage("Do you want to delete this item from the database?");
+        builder.setPositiveButton("Yes, delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteEnterprise();
+                getActivity().onBackPressed();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        builder.create();
+        builder.show();
+    }
+
+    private void deleteEnterprise(){
+        if(mCurrentEnterpriseUri != null){
+            int rowsDeleted = getActivity().getContentResolver().delete(mCurrentEnterpriseUri, null, null);
+            // Show a toast message depending on whether or not the delete was successful.
+            if (rowsDeleted == 0) {
+                // If no rows were deleted, then there was an error with the delete.
+                Toast.makeText(getActivity(), "Error during delete",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the delete was successful and we can display a toast.
+                Toast.makeText(getActivity(), "product successfully deleted",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return new CursorLoader(getActivity(), mCurrentEnterpriseUri, null, null, null, null);
+        String[] projection = {EnterpriseEntry._ID, EnterpriseEntry.ENTERPRISE_NAME, EnterpriseEntry.ENTERPRISE_CONTACT_PERSON,
+                EnterpriseEntry.ENTERPRISE_PHONE, EnterpriseEntry.ENTERPRISE_ADDRESS, EnterpriseEntry.ENTERPRISE_EMAIL};
+        return new CursorLoader(getActivity(), mCurrentEnterpriseUri, projection, null, null, null);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.example.oya.inventoryapp.ui;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +25,6 @@ import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.data.InventoryContract;
 import com.example.oya.inventoryapp.data.InventoryContract.ProductEntry;
 import com.example.oya.inventoryapp.data.InventoryContract.TransactionEntry;
-import com.example.oya.inventoryapp.data.InventoryDBHelper;
-import com.example.oya.inventoryapp.model.Transaction;
 import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.utils.DatabaseUtils;
 
@@ -33,13 +32,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AddTransactionFragment extends Fragment implements View.OnClickListener,
-        AdapterView.OnItemSelectedListener, DatePickerFragment.MyOnDateSetListener{
+        AdapterView.OnItemSelectedListener, DatePickerFragment.MyOnDateSetListener {
 
     private String mTransactionType = null;
     private TextView date_tv;
     private ArrayList<String> enterpriseNames;
     private ArrayList<String> productNames;
-    private ArrayList<Integer> quantitiesList = new ArrayList<>();
+    private final ArrayList<Integer> quantitiesList = new ArrayList<>();
     private String enterpriseChosen;
     private String productChosen;
     private EditText quantity_et;
@@ -47,8 +46,9 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
     private static String mDate;
     private TextView quantity_in_stock_tv;
     private int mQuantityInStock;
-    private int mProductPosition;
+    private long mProductId;
     private String mRelationshipType = null;
+    private String mEnterprisePhone = null;
 
     public AddTransactionFragment() {
     }
@@ -62,11 +62,14 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         So we need to retrieve the info about the transaction type from the bundle*/
 
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             mTransactionType = bundle.getString(Constants.TRANSACTION_TYPE);
-        }
-        if(bundle.containsKey(Constants.PRODUCT_POSITION)) {
-            mProductPosition = bundle.getInt(Constants.PRODUCT_POSITION);
+            if (bundle.containsKey(Constants.PRODUCT_ID)) {
+                mProductId = bundle.getLong(Constants.PRODUCT_ID);
+            }
+            if (bundle.containsKey(Constants.PRODUCT_NAME)) {
+                productChosen = bundle.getString(Constants.PRODUCT_NAME);
+            }
         }
 
         //Set the corresponding title: New Acquisition or New Delivery
@@ -79,6 +82,7 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         saveTransaction_btn.setOnClickListener(this);
         TextView addEnterprise_btn = rootView.findViewById(R.id.add_enterprise_btn);
         addEnterprise_btn.setOnClickListener(this);
+        ImageView callEnterprise = rootView.findViewById(R.id.transaction_cal_btn);
 
         //Set the date to current date by default
         date_tv = rootView.findViewById(R.id.transaction_date_tv);
@@ -86,10 +90,10 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
 
         //If it is a acquisition we'll write supplier name, if it is a delivery we'll write client name
         TextView supplierOrClient_tv = rootView.findViewById(R.id.transaction_enterprise_tv);
-        if(mTransactionType.equals(Constants.ACQUISITION)){
+        if (mTransactionType.equals(Constants.ACQUISITION)) {
             mRelationshipType = Constants.SUPPLIER;
             addEnterprise_btn.setText(R.string.add_supplier);
-        } else if(mTransactionType.equals(Constants.DELIVERY)){
+        } else if (mTransactionType.equals(Constants.DELIVERY)) {
             mRelationshipType = Constants.CLIENT;
             addEnterprise_btn.setText(R.string.add_client);
         }
@@ -99,12 +103,14 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         quantity_et = rootView.findViewById(R.id.transaction_quantity_et);
         price_et = rootView.findViewById(R.id.transaction_price_et);
         quantity_in_stock_tv = rootView.findViewById(R.id.transaction_quantity_in_stock);
+        TextView enterprisePhone_tv = rootView.findViewById(R.id.transaction_enterprise_phone);
+        TextView phone_tv = rootView.findViewById(R.id.transaction_phone_tv);
 
         //Set enterprise spinner
         Spinner enterprise_spin = rootView.findViewById(R.id.enterprise_spinner);
         enterprise_spin.setOnItemSelectedListener(this);
         enterpriseNames = DatabaseUtils.getEnterpriseNames(getActivity(), mRelationshipType);
-        ArrayAdapter<String> enterpriseSpinAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, enterpriseNames);
+        ArrayAdapter<String> enterpriseSpinAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, enterpriseNames);
         enterpriseSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         enterprise_spin.setAdapter(enterpriseSpinAdapter);
 
@@ -112,22 +118,44 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         Spinner product_spin = rootView.findViewById(R.id.product_spinner);
         product_spin.setOnItemSelectedListener(this);
         productNames = getProductNames();
-        ArrayAdapter<String> productSpinAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, productNames);
+        ArrayAdapter<String> productSpinAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, productNames);
         productSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         product_spin.setAdapter(productSpinAdapter);
 
-        //If user clicked this for a specific product set that product selected on the spinner
-        if(mProductPosition != 0) {
-            product_spin.setSelection(mProductPosition);
+        if (mTransactionType.equals(Constants.ACQUISITION) && (mProductId != 0)) {
+            Cursor cursor = DatabaseUtils.mergeTables(getActivity(), mProductId);
+            cursor.moveToFirst();
+            int productNameColumnIndex = cursor.getColumnIndex(ProductEntry.PRODUCT_NAME);
+            int supplierNameColumnIndex = cursor.getColumnIndex(ProductEntry.SUPPLIER_NAME);
+            int enterprisePhoneColumnIndex = cursor.getColumnIndex(InventoryContract.EnterpriseEntry.ENTERPRISE_PHONE);
+
+            productChosen = cursor.getString(productNameColumnIndex);
+            enterpriseChosen = cursor.getString(supplierNameColumnIndex);
+            mEnterprisePhone = cursor.getString(enterprisePhoneColumnIndex);
+            cursor.close();
+
+            phone_tv.setVisibility(View.VISIBLE);
+            callEnterprise.setVisibility(View.VISIBLE);
+            callEnterprise.setOnClickListener(this);
         }
 
+        //If user clicked this for a specific product set that product selected on the spinner
+        if (productChosen != null) {
+            product_spin.setSelection(productNames.indexOf(productChosen));
+        }
+        if (enterpriseChosen != null) {
+            enterprise_spin.setSelection(enterpriseNames.indexOf(enterpriseChosen));
+        }
+        if (mEnterprisePhone != null) {
+            enterprisePhone_tv.setText(mEnterprisePhone);
+        }
         return rootView;
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch(id) {
+        switch (id) {
             case R.id.change_date_btn: {
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getChildFragmentManager(), "datePicker");
@@ -149,10 +177,15 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
                 saveTransactionToDatabase();
                 break;
             }
+            case R.id.transaction_cal_btn:{
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", mEnterprisePhone, null));
+                getActivity().startActivity(intent);
+                break;
+            }
         }
     }
 
-    private ArrayList<String> getProductNames(){
+    private ArrayList<String> getProductNames() {
         ArrayList<String> productList = new ArrayList<>();
         //I need only product name column for this list
         String[] projection = {ProductEntry.PRODUCT_NAME, ProductEntry.QUANTITY_IN_STOCK};
@@ -173,7 +206,7 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         return productList;
     }
 
-    private void setDateToTodayByDefault(){
+    private void setDateToTodayByDefault() {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH) + 1;
@@ -184,12 +217,12 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onItemSelected(AdapterView<?> spinner, View view, int position, long id) {
-        switch(spinner.getId()){
-            case R.id.enterprise_spinner:{
+        switch (spinner.getId()) {
+            case R.id.enterprise_spinner: {
                 enterpriseChosen = enterpriseNames.get(position);
                 break;
             }
-            case R.id.product_spinner:{
+            case R.id.product_spinner: {
                 productChosen = productNames.get(position);
                 mQuantityInStock = quantitiesList.get(position);
                 quantity_in_stock_tv.setText(String.valueOf(mQuantityInStock));
@@ -202,29 +235,29 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
-    private void saveTransactionToDatabase(){
+    private void saveTransactionToDatabase() {
         //Check the validity of quantity
         int quantity;
-        try{
+        try {
             quantity = Integer.valueOf(quantity_et.getText().toString().trim());
-            if(quantity<1){
+            if (quantity < 1) {
                 Toast.makeText(getActivity(), R.string.quantity_should_be_positive, Toast.LENGTH_SHORT).show();
                 return;
             }
-        } catch(NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             Toast.makeText(getActivity(), R.string.quantity_should_be_positive, Toast.LENGTH_SHORT).show();
             return;
         }
         //If this is a delivery, quantity to be delivered cannot be more than the quantity in stock
-        if(mTransactionType.equals(Constants.DELIVERY) && (quantity > mQuantityInStock)) {
+        if (mTransactionType.equals(Constants.DELIVERY) && (quantity > mQuantityInStock)) {
             Toast.makeText(getActivity(), getString(R.string.stock_not_enough_warning, mQuantityInStock), Toast.LENGTH_SHORT).show();
             return;
         }
         //Check the validity of price
         float price;
-        try{
+        try {
             price = Float.valueOf(price_et.getText().toString().trim());
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             Toast.makeText(getActivity(), R.string.price_should_not_contain_text, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -248,9 +281,9 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         //Transactions should update the quantity in the products table as well.
         ContentValues valuesForUpdate = new ContentValues();
         int newQuantity;
-        if(mTransactionType.equals(Constants.DELIVERY)){
+        if (mTransactionType.equals(Constants.DELIVERY)) {
             newQuantity = mQuantityInStock - quantity;
-        } else{
+        } else {
             newQuantity = mQuantityInStock + quantity;
         }
         //Update the quantity textview in the current fragment

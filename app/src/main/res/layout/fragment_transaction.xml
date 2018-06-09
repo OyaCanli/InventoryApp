@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,33 +30,34 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/add_enterprise_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/transaction_enterprise_phone" />
 
     <TextView
         android:id="@+id/textView7"
         style="@style/FieldStyle"
-        android:text="Product Name: "
+        android:text="@string/product_name"
         app:layout_constraintBottom_toBottomOf="@+id/product_spinner"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView11"
+        style="@style/FieldStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/FieldStyle"
-        android:text="Quantity In Stock: "
+        android:text="@string/quantity_in_stock"
+        app:layout_constraintBaseline_toBaselineOf="@id/transaction_quantity_in_stock"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView7"
-        app:layout_constraintBaseline_toBaselineOf="@id/transaction_quantity_in_stock"/>
+        app:layout_constraintTop_toBottomOf="@id/textView7" />
 
     <TextView
         android:id="@+id/transaction_quantity_in_stock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
         android:layout_margin="@dimen/margin_standard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
@@ -76,7 +76,7 @@
     <TextView
         android:id="@+id/textView8"
         style="@style/FieldStyle"
-        android:text="Quantity: "
+        android:text="@string/quantity"
         app:layout_constraintBaseline_toBaselineOf="@+id/transaction_quantity_et"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -92,7 +92,7 @@
     <TextView
         android:id="@+id/textView9"
         style="@style/FieldStyle"
-        android:text="Price: "
+        android:text="@string/price"
         app:layout_constraintBaseline_toBaselineOf="@+id/transaction_price_et"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -127,7 +127,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/large_margin"
-        android:text="Save"
+        android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transaction_date_tv" />
@@ -136,11 +136,11 @@
         android:id="@+id/change_date_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="italic"
-        android:textColor="@color/colorAccent"
         android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginTop="8dp"
         android:text="@string/change_date"
+        android:textColor="@color/colorAccent"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transaction_price_et" />
 
@@ -149,10 +149,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textStyle="italic"
         android:textColor="@color/colorAccent"
+        android:textStyle="italic"
         app:layout_constraintStart_toStartOf="@+id/enterprise_spinner"
         app:layout_constraintTop_toBottomOf="@+id/enterprise_spinner"
         tools:text="Add supplier" />
+
+    <TextView
+        android:id="@+id/transaction_enterprise_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@+id/barrier"
+        app:layout_constraintTop_toBottomOf="@+id/add_enterprise_btn"
+        tools:text="081666666" />
+
+    <TextView
+        android:id="@+id/transaction_phone_tv"
+        style="@style/FieldStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/phone"
+        android:visibility="invisible"
+        app:layout_constraintBaseline_toBaselineOf="@+id/transaction_enterprise_phone"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/transaction_cal_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/transaction_enterprise_phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/transaction_enterprise_phone"
+        app:srcCompat="@drawable/baseline_contact_phone_black_36" />
 
 </android.support.constraint.ConstraintLayout>

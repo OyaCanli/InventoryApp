@@ -4,9 +4,9 @@ public final class Constants {
 
     public final static String RELATION_TYPE = "relationType";
 
-    public final static String CLIENT = "client";
+    public final static String CLIENT = "Client";
 
-    public final static String SUPPLIER = "supplier";
+    public final static String SUPPLIER = "Supplier";
 
     public final static String TRANSACTION_TYPE = "transactionType";
 
@@ -34,9 +34,11 @@ public final class Constants {
 
     public final static String PRODUCT_URI = "productUri";
 
-    public final static String ENTERPRISE_URI = "enterpriseUri";
+    public final static String PRODUCT_ID = "productId";
 
-    public final static String PRODUCT_POSITION = "productPosition";
+    public final static String PRODUCT_NAME = "productName";
+
+    public final static String ENTERPRISE_URI = "enterpriseUri";
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -44,6 +46,7 @@ public final class Constants {
 
     public static final int REQUEST_STORAGE_PERMISSION = 2;
 
-    public static int PICK_IMAGE_REQUEST = 3;
+    public static final int PICK_IMAGE_REQUEST = 3;
+
 
 }

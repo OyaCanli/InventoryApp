@@ -25,7 +25,7 @@ import com.example.oya.inventoryapp.utils.Constants;
 public class ProductListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, ProductCursorAdapter.SaleOrderButtonsClickListener{
 
-    ProductCursorAdapter mCursorAdapter;
+    private ProductCursorAdapter mCursorAdapter;
 
     public ProductListFragment() {
     }
@@ -40,7 +40,7 @@ public class ProductListFragment extends Fragment implements
         ListView listView = rootView.findViewById(R.id.list);
         listView.setAdapter(mCursorAdapter);
         TextView empty_tv = rootView.findViewById(R.id.empty_view);
-        empty_tv.setText("No products found");
+        empty_tv.setText(R.string.no_products_found);
         listView.setEmptyView(empty_tv);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -79,13 +79,14 @@ public class ProductListFragment extends Fragment implements
     }
 
     @Override
-    public void onSaleOrOrderButtonClicked(View v, int position) {
+    public void onSaleOrOrderButtonClicked(View v, long id, String productName) {
         Bundle args = new Bundle();
-        args.putInt(Constants.PRODUCT_POSITION, position);
         if(v.getId() == R.id.product_item_sale_btn){
             args.putString(Constants.TRANSACTION_TYPE, Constants.DELIVERY);
+            args.putString(Constants.PRODUCT_NAME, productName);
         } else {
             args.putString(Constants.TRANSACTION_TYPE, Constants.ACQUISITION);
+            args.putLong(Constants.PRODUCT_ID, id);
         }
         AddTransactionFragment transactionFrag = new AddTransactionFragment();
         transactionFrag.setArguments(args);

@@ -15,8 +15,6 @@ import android.util.Log;
 import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
 import com.example.oya.inventoryapp.data.InventoryContract.ProductEntry;
 import com.example.oya.inventoryapp.data.InventoryContract.TransactionEntry;
-import com.example.oya.inventoryapp.model.Enterprise;
-import com.example.oya.inventoryapp.model.Transaction;
 
 public class InventoryProvider extends ContentProvider {
 
@@ -33,7 +31,7 @@ public class InventoryProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-    public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
+    private static final String LOG_TAG = InventoryProvider.class.getSimpleName();
 
     @Override
     public boolean onCreate() {
@@ -45,8 +43,8 @@ public class InventoryProvider extends ContentProvider {
     static {
         sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_PRODUCTS, PRODUCTS);
         sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_PRODUCTS + "/#", PRODUCT_WITH_ID);
-        sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_ENTERPRICES, ENTERPRISES);
-        sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_ENTERPRICES + "/#", ENTERPRISES_WITH_ID);
+        sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_ENTERPRISES, ENTERPRISES);
+        sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_ENTERPRISES + "/#", ENTERPRISES_WITH_ID);
         sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_TRANSACTIONS, TRANSACTIONS);
         sUriMatcher.addURI(InventoryContract.AUTHORITY, InventoryContract.PATH_TRANSACTIONS + "/#", TRANSACTIONS_WITH_ID);
     }
@@ -57,8 +55,8 @@ public class InventoryProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
         Cursor cursor;
         int match = sUriMatcher.match(uri);
-        switch(match){
-            case PRODUCTS:{
+        switch (match) {
+            case PRODUCTS: {
                 cursor = database.query(
                         ProductEntry.TABLE_NAME,   // The table to query
                         projection,            // The columns to return
@@ -69,15 +67,15 @@ public class InventoryProvider extends ContentProvider {
                         null);                   // The sort order
                 break;
             }
-            case PRODUCT_WITH_ID:{
+            case PRODUCT_WITH_ID: {
                 selection = ProductEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 cursor = database.query(ProductEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, null);
                 break;
             }
-            case ENTERPRISES:{
+            case ENTERPRISES: {
                 cursor = database.query(
                         EnterpriseEntry.TABLE_NAME,   // The table to query
                         projection,            // The columns to return
@@ -88,23 +86,23 @@ public class InventoryProvider extends ContentProvider {
                         null);                   // The sort order
                 break;
             }
-            case ENTERPRISES_WITH_ID:{
+            case ENTERPRISES_WITH_ID: {
                 selection = EnterpriseEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 cursor = database.query(EnterpriseEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, null);
                 break;
             }
-            case TRANSACTIONS:{
+            case TRANSACTIONS: {
                 cursor = database.query(
                         TransactionEntry.TABLE_NAME,
                         null, null, null, null, null, null);
                 break;
             }
-            case TRANSACTIONS_WITH_ID:{
+            case TRANSACTIONS_WITH_ID: {
                 selection = TransactionEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 cursor = database.query(TransactionEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, null);
@@ -113,7 +111,7 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
-        if(cursor != null) cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (cursor != null) cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -147,16 +145,16 @@ public class InventoryProvider extends ContentProvider {
 
         long id;
         final int match = sUriMatcher.match(uri);
-        switch(match){
-            case PRODUCTS:{
+        switch (match) {
+            case PRODUCTS: {
                 id = database.insert(ProductEntry.TABLE_NAME, null, values);
                 break;
             }
-            case ENTERPRISES:{
+            case ENTERPRISES: {
                 id = database.insert(EnterpriseEntry.TABLE_NAME, null, values);
                 break;
             }
-            case TRANSACTIONS:{
+            case TRANSACTIONS: {
                 id = database.insert(TransactionEntry.TABLE_NAME, null, values);
                 break;
             }
@@ -164,7 +162,7 @@ public class InventoryProvider extends ContentProvider {
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
         if (id == -1) {
-            Log.d(LOG_TAG,"Failed to insert row for " + uri);
+            Log.d(LOG_TAG, "Failed to insert row for " + uri);
         }
         // Notify all listeners that the data has changed for the pet content URI
         getContext().getContentResolver().notifyChange(uri, null);
@@ -179,12 +177,26 @@ public class InventoryProvider extends ContentProvider {
         // Track the number of rows that were deleted
         int rowsDeleted;
         final int match = sUriMatcher.match(uri);
-        switch(match){
-            case PRODUCT_WITH_ID:{
+        switch (match) {
+            case PRODUCT_WITH_ID: {
                 // Delete a single row given by the ID in the URI
                 selection = ProductEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            }
+            case ENTERPRISES_WITH_ID: {
+                // Delete a single row given by the ID in the URI
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(EnterpriseEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            }
+            case TRANSACTIONS_WITH_ID: {
+                // Delete a single row given by the ID in the URI
+                selection = ProductEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(TransactionEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             }
             default:
@@ -205,26 +217,26 @@ public class InventoryProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
-        switch(match){
-            case PRODUCTS:{
+        switch (match) {
+            case PRODUCTS: {
                 rowsUpdated = database.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }
-            case PRODUCT_WITH_ID:{
+            case PRODUCT_WITH_ID: {
                 selection = ProductEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsUpdated = database.update(ProductEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }
-            case ENTERPRISES_WITH_ID:{
+            case ENTERPRISES_WITH_ID: {
                 selection = EnterpriseEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsUpdated = database.update(EnterpriseEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }
-            case TRANSACTIONS_WITH_ID:{
+            case TRANSACTIONS_WITH_ID: {
                 selection = TransactionEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsUpdated = database.update(TransactionEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }

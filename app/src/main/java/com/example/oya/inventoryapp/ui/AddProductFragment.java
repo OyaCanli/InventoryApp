@@ -1,14 +1,11 @@
 package com.example.oya.inventoryapp.ui;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,7 +20,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,14 +35,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.data.InventoryContract;
+import com.example.oya.inventoryapp.data.InventoryContract.ProductEntry;
 import com.example.oya.inventoryapp.utils.BitmapUtils;
 import com.example.oya.inventoryapp.utils.Constants;
 import com.example.oya.inventoryapp.utils.DatabaseUtils;
-import com.example.oya.inventoryapp.R;
-import com.example.oya.inventoryapp.data.InventoryContract.ProductEntry;
-import com.example.oya.inventoryapp.data.InventoryDBHelper;
+import com.example.oya.inventoryapp.utils.GlideApp;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,10 +61,17 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     private Uri mCurrentProductUri;
     private Spinner mSupplierSpin;
     private ArrayAdapter<String> mSpinAdapter;
-    ImageView productImage;
-    AlertDialog pickImageDialog;
-    String mTempPhotoPath;
-    Uri mPhotoURI;
+    private ImageView productImage;
+    private AlertDialog pickImageDialog;
+    private String mTempPhotoPath;
+    private Uri mPhotoURI;
+    private int mUsersChoice;
+
+    final DialogInterface.OnClickListener mDialogClickListener = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int item) {
+            mUsersChoice = item;
+        }
+    };
 
     public AddProductFragment() {
         setHasOptionsMenu(true);
@@ -97,7 +99,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         //Set the spinner which shows existing supplier names
         mSupplierSpin.setOnItemSelectedListener(this);
         supplierNames = DatabaseUtils.getEnterpriseNames(getActivity(), Constants.SUPPLIER);
-        mSpinAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, supplierNames);
+        mSpinAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, supplierNames);
         mSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSupplierSpin.setAdapter(mSpinAdapter);
 
@@ -130,7 +132,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_add_product, menu);
+        inflater.inflate(R.menu.menu_with_delete, menu);
     }
 
     @Override
@@ -141,7 +143,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         return super.onOptionsItemSelected(item);
     }
 
-    public void openAlertDialogForDelete() {
+    private void openAlertDialogForDelete() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Theme_AppCompat_DayNight_Dialog);
         builder.setMessage("Do you want to delete this item from the database?");
         builder.setPositiveButton("Yes, delete", new DialogInterface.OnClickListener() {
@@ -209,9 +211,11 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         String[] dialogOptions = getActivity().getResources().getStringArray(R.array.dialog_options);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add image from: ");
-        builder.setSingleChoiceItems(dialogOptions, -1, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                switch (item) {
+        builder.setSingleChoiceItems(dialogOptions, -1, mDialogClickListener);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (mUsersChoice) {
                     case 0:{
                         if (ContextCompat.checkSelfPermission(getActivity(),
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -230,6 +234,11 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                         openGallery();
                         break;
                 }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
             }
         });
         pickImageDialog = builder.create();
@@ -276,7 +285,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         pickImageDialog.dismiss();
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                Glide.with(getActivity())
+                GlideApp.with(getActivity())
                         .load(mPhotoURI)
                         .into(productImage);
             } else {
@@ -285,7 +294,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         } else if (requestCode == Constants.PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
-                Glide.with(getActivity())
+                GlideApp.with(getActivity())
                         .load(uri)
                         .into(productImage);
             }
@@ -396,16 +405,24 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
             int quantityColumnIndex = cursor.getColumnIndex(InventoryContract.ProductEntry.QUANTITY_IN_STOCK);
             int priceColumnIndex = cursor.getColumnIndex(InventoryContract.ProductEntry.SALE_PRICE);
             int supplierColumnIndex = cursor.getColumnIndex(ProductEntry.SUPPLIER_NAME);
+            int imageColumnIndex = cursor.getColumnIndex(ProductEntry.IMAGE_FILE_PATH);
 
             String productName = cursor.getString(productNameColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
             float price = cursor.getFloat(priceColumnIndex);
             String supplierName = cursor.getString(supplierColumnIndex);
+            String imagePath = cursor.getString(imageColumnIndex);
+            Uri imageUri = Uri.parse(imagePath);
 
             productName_et.setText(productName);
             salePrice_et.setText(String.valueOf(price));
             quantity_et.setText(String.valueOf(quantity));
             mSupplierSpin.setSelection(mSpinAdapter.getPosition(supplierName));
+            GlideApp.with(getActivity())
+                    .load(imageUri)
+                    .placeholder(R.drawable.placeholder)
+                    .into(productImage);
+
         }
     }
 

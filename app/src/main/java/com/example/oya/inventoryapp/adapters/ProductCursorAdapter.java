@@ -2,30 +2,23 @@ package com.example.oya.inventoryapp.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.CursorAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.oya.inventoryapp.R;
+import com.example.oya.inventoryapp.data.InventoryContract;
+import com.example.oya.inventoryapp.utils.GlideApp;
 
 import java.text.NumberFormat;
 
-import com.bumptech.glide.Glide;
-import com.example.oya.inventoryapp.R;
-import com.example.oya.inventoryapp.data.InventoryContract;
-import com.example.oya.inventoryapp.ui.AddTransactionFragment;
-import com.example.oya.inventoryapp.utils.Constants;
-import com.example.oya.inventoryapp.utils.GlideApp;
+public class ProductCursorAdapter extends CursorAdapter{
 
-public class ProductCursorAdapter extends CursorAdapter implements View.OnClickListener{
-
-    SaleOrderButtonsClickListener mTransactionBtnListener;
-    int mCursorPosition;
+    private final SaleOrderButtonsClickListener mTransactionBtnListener;
 
     public ProductCursorAdapter(@NonNull Context context, Cursor cursor, SaleOrderButtonsClickListener listener) {
         super(context, cursor, 0);
@@ -40,8 +33,6 @@ public class ProductCursorAdapter extends CursorAdapter implements View.OnClickL
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        mCursorPosition = cursor.getPosition();
-
         TextView productName_tv = view.findViewById(R.id.product_item_product_name);
         TextView price_tv = view.findViewById(R.id.product_item_price);
         TextView quantity_tv = view.findViewById(R.id.product_item_quantity);
@@ -49,37 +40,37 @@ public class ProductCursorAdapter extends CursorAdapter implements View.OnClickL
         TextView command_btn = view.findViewById(R.id.product_item_command_btn);
         ImageView product_iv = view.findViewById(R.id.product_item_image);
 
-        int productNameColumnIndex = cursor.getColumnIndex(InventoryContract.ProductEntry.PRODUCT_NAME);
-        int quantityColumnIndex = cursor.getColumnIndex(InventoryContract.ProductEntry.QUANTITY_IN_STOCK);
-        int priceColumnIndex = cursor.getColumnIndex(InventoryContract.ProductEntry.SALE_PRICE);
-        int imageColumnIndex = cursor.getColumnIndex(InventoryContract.ProductEntry.IMAGE_FILE_PATH);
-
-        String productName = cursor.getString(productNameColumnIndex);
-        int quantity = cursor.getInt(quantityColumnIndex);
-        float price = cursor.getFloat(priceColumnIndex);
-        String imageFilePath = cursor.getString(imageColumnIndex);
+        final long id = cursor.getLong(cursor.getColumnIndex(InventoryContract.ProductEntry._ID));
+        final String productName = cursor.getString(cursor.getColumnIndex(InventoryContract.ProductEntry.PRODUCT_NAME));
+        int quantity = cursor.getInt(cursor.getColumnIndex(InventoryContract.ProductEntry.QUANTITY_IN_STOCK));
+        float price = cursor.getFloat(cursor.getColumnIndex(InventoryContract.ProductEntry.SALE_PRICE));
+        String imageFilePath = cursor.getString(cursor.getColumnIndex(InventoryContract.ProductEntry.IMAGE_FILE_PATH));
 
         productName_tv.setText(productName);
         quantity_tv.setText(mContext.getString(R.string.in_stock, quantity));
         price_tv.setText(NumberFormat.getCurrencyInstance().format(price));
-        GlideApp.with(mContext)
+        GlideApp.with(context)
                 .load(imageFilePath)
                 .centerCrop()
                 .placeholder(R.drawable.placeholder)
                 .into(product_iv);
 
-        sale_btn.setOnClickListener(this);
-        command_btn.setOnClickListener(this);
+        sale_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTransactionBtnListener.onSaleOrOrderButtonClicked(v, id, productName);
+            }
+        });
+        command_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTransactionBtnListener.onSaleOrOrderButtonClicked(v, id, productName);
+            }
+        });
     }
-
-    @Override
-    public void onClick(View v) {
-        mTransactionBtnListener.onSaleOrOrderButtonClicked(v, mCursorPosition);
-    }
-
 
     public interface SaleOrderButtonsClickListener{
-        void onSaleOrOrderButtonClicked(View v, int position);
+        void onSaleOrOrderButtonClicked(View v, long id, String productName);
     }
 
 }
