@@ -3,40 +3,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/products"
-            android:title="@string/products" />
-        <item
-            android:id="@+id/suppliers"
-            android:title="@string/suppliers" />
-        <item
-            android:id="@+id/clients"
-            android:title="@string/clients" />
-        <item
-            android:id="@+id/transaction_list"
-            android:title="@string/transactions"/>
-    </group>
+    <item android:id="@+id/see_all"
+        android:title="SEE ALL:">
+        <menu>
+            <item
+                android:id="@+id/products"
+                android:title="@string/products" />
+            <item
+                android:id="@+id/suppliers"
+                android:title="@string/suppliers" />
+            <item
+                android:id="@+id/clients"
+                android:title="@string/clients" />
+            <item
+                android:id="@+id/transaction_list"
+                android:title="@string/transactions" />
+        </menu>
+    </item>
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/add_product"
-            android:title="@string/new_product" />
-        <item
-            android:id="@+id/add_supplier"
-            android:title="@string/new_supplier" />
-        <item
-            android:id="@+id/add_client"
-            android:title="@string/new_client" />
-    </group>
+    <item
+        android:id="@+id/add_item"
+        android:title="ADD:">
+        <menu>
+            <item
+                android:id="@+id/add_product"
+                android:title="@string/new_product" />
+            <item
+                android:id="@+id/add_supplier"
+                android:title="@string/new_supplier" />
+            <item
+                android:id="@+id/add_client"
+                android:title="@string/new_client" />
+        </menu>
+    </item>
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/new_delivery"
-            android:title="@string/new_delivery" />
-        <item
-            android:id="@+id/new_acquisition"
-            android:title="@string/new_acquisition" />
-    </group>
-
+    <item
+        android:id="@+id/new_transaction"
+        android:title="NEW TRANSACTION:">
+        <menu>
+            <item
+                android:id="@+id/new_delivery"
+                android:title="@string/new_delivery" />
+            <item
+                android:id="@+id/new_acquisition"
+                android:title="@string/new_acquisition" />
+        </menu>
+    </item>
 </menu>

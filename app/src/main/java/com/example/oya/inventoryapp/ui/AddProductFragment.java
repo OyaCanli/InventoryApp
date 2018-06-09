@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -65,6 +66,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     ImageView productImage;
     AlertDialog pickImageDialog;
     String mTempPhotoPath;
+    Uri mPhotoURI;
 
     public AddProductFragment() {
     }
@@ -80,7 +82,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         quantity_et = rootView.findViewById(R.id.editQuantity);
         mSupplierSpin = rootView.findViewById(R.id.supplierSpinner);
         Button save_product_btn = rootView.findViewById(R.id.save_btn);
-        Button add_supplier_btn = rootView.findViewById(R.id.add_supplier_btn);
+        TextView add_supplier_btn = rootView.findViewById(R.id.add_supplier_btn);
         productImage = rootView.findViewById(R.id.product_details_gallery_image);
 
         //Set click listeners on buttons
@@ -163,13 +165,22 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                         break;
                     }
                     case 1:
-                        // Your code when 2nd  option seletced
+                        openGallery();
                         break;
                 }
             }
         });
         pickImageDialog = builder.create();
         pickImageDialog.show();
+    }
+
+    private void openGallery(){
+        Intent intent = new Intent();
+        // Show only images, no videos or anything else
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        // Always show the chooser (if there are multiple options available)
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.PICK_IMAGE_REQUEST);
     }
 
     private void openCamera() {
@@ -188,10 +199,10 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                 // Get the path of the temporary file
                 mTempPhotoPath = photoFile.getAbsolutePath();
 
-                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                mPhotoURI = FileProvider.getUriForFile(getActivity(),
                         Constants.FILE_PROVIDER_AUTHORITY,
                         photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoURI);
                 startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -201,12 +212,21 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         pickImageDialog.dismiss();
-        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Glide.with(getActivity())
-                    .load(mTempPhotoPath)
-                    .into(productImage);
-        } else {
-            BitmapUtils.deleteImageFile(getActivity(), mTempPhotoPath);
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Glide.with(getActivity())
+                        .load(mPhotoURI)
+                        .into(productImage);
+            } else {
+                BitmapUtils.deleteImageFile(getActivity(), mTempPhotoPath);
+            }
+        } else if (requestCode == Constants.PICK_IMAGE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                Glide.with(getActivity())
+                        .load(uri)
+                        .into(productImage);
+            }
         }
     }
 
@@ -249,15 +269,25 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
             return;
         }
 
-        //Sale price can be null, so not verifying this
-        String salePrice = salePrice_et.getText().toString().trim();
+        float salePrice;
+        try{
+            salePrice = Float.valueOf(salePrice_et.getText().toString().trim());
+            if(salePrice < 0){
+                Toast.makeText(getActivity(), R.string.price_should_be_number, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (NumberFormatException nfe) {
+            Toast.makeText(getActivity(), R.string.price_should_be_number, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.PRODUCT_NAME, productName);
         values.put(ProductEntry.SALE_PRICE, salePrice);
         values.put(ProductEntry.QUANTITY_IN_STOCK, quantityInStock);
         values.put(ProductEntry.SUPPLIER_NAME, chosenSupplierName);
-        values.put(ProductEntry.IMAGE_FILE_PATH, mTempPhotoPath);
+        values.put(ProductEntry.IMAGE_FILE_PATH, mPhotoURI.toString());
 
         if (mCurrentProductUri == null) {
             //This is new product entry

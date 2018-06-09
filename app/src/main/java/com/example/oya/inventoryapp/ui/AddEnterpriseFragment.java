@@ -41,7 +41,7 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_add_supplier, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_add_enterpriser, container, false);
         Bundle bundle = getArguments();
         mTypeOfRelationship = bundle.getString(Constants.RELATION_TYPE);
         if(bundle.containsKey(Constants.REQUEST_CODE)){
@@ -77,13 +77,11 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         saveSupplier();
         if(mUserIsAddingAProduct){
-            Toast.makeText(getActivity(), "You can click BACK button to continue adding your product", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
         }
     }
 
     private void saveSupplier(){
-        InventoryDBHelper mDbHelper = new InventoryDBHelper(getActivity());
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         String enterpriseName = enterpriseName_et.getText().toString().trim();
         String enterpriseAddress = enterpriseAddress_et.getText().toString().trim();
@@ -99,17 +97,24 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
         values.put(EnterpriseEntry.ENTERPRISE_CONTACT_PERSON, contactPerson);
         values.put(EnterpriseEntry.RELATION_TYPE, mTypeOfRelationship);
 
-        // Insert a new row for pet in the database, returning the ID of that new row.
-        long newRowId = db.insert(EnterpriseEntry.TABLE_NAME, null, values);
-
-        // Show a toast message depending on whether or not the insertion was successful
-        if (newRowId == -1) {
-            // If the row ID is -1, then there was an error with insertion.
-            Toast.makeText(getActivity(), "Error with saving", Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, the insertion was successful and we can display a toast with the row ID.
-            Toast.makeText(getActivity(), "Entry is successfully saved ", Toast.LENGTH_SHORT).show();
+        if (mCurrentEnterpriseUri == null) {
+            //This is a new supplier or client
+            Uri newUri = getActivity().getContentResolver().insert(EnterpriseEntry.CONTENT_URI, values);
+            if (newUri == null) {
+                Toast.makeText(getActivity(), R.string.error_saving, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), R.string.enterprise_successfully_saved, Toast.LENGTH_SHORT).show();
+            }
+        } else{
+            // Otherwise this is an existing enterprise, so update the entry
+            int rowsAffected = getActivity().getContentResolver().update(mCurrentEnterpriseUri, values, null, null);
+            if (rowsAffected == 0) {
+                Toast.makeText(getActivity(), R.string.error_updating, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), R.string.successfully_updated, Toast.LENGTH_SHORT).show();
+            }
         }
+
     }
 
     @NonNull

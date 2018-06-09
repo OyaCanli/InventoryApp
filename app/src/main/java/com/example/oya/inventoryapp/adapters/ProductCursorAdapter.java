@@ -20,6 +20,7 @@ import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.data.InventoryContract;
 import com.example.oya.inventoryapp.ui.AddTransactionFragment;
 import com.example.oya.inventoryapp.utils.Constants;
+import com.example.oya.inventoryapp.utils.GlideApp;
 
 public class ProductCursorAdapter extends CursorAdapter implements View.OnClickListener{
 
@@ -61,8 +62,10 @@ public class ProductCursorAdapter extends CursorAdapter implements View.OnClickL
         productName_tv.setText(productName);
         quantity_tv.setText(mContext.getString(R.string.in_stock, quantity));
         price_tv.setText(NumberFormat.getCurrencyInstance().format(price));
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 .load(imageFilePath)
+                .centerCrop()
+                .placeholder(R.drawable.placeholder)
                 .into(product_iv);
 
         sale_btn.setOnClickListener(this);

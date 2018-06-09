@@ -48,6 +48,7 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
     private TextView quantity_in_stock_tv;
     private int mQuantityInStock;
     private int mProductPosition;
+    private String mRelationshipType = null;
 
     public AddTransactionFragment() {
     }
@@ -72,10 +73,12 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         getActivity().setTitle(getString(R.string.new_transaction, mTransactionType));
 
         //Set clickListeners to buttons
-        Button changeDate_btn = rootView.findViewById(R.id.change_date_btn);
+        TextView changeDate_btn = rootView.findViewById(R.id.change_date_btn);
         changeDate_btn.setOnClickListener(this);
         Button saveTransaction_btn = rootView.findViewById(R.id.save_transaction_btn);
         saveTransaction_btn.setOnClickListener(this);
+        TextView addEnterprise_btn = rootView.findViewById(R.id.add_enterprise_btn);
+        addEnterprise_btn.setOnClickListener(this);
 
         //Set the date to current date by default
         date_tv = rootView.findViewById(R.id.transaction_date_tv);
@@ -83,13 +86,14 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
 
         //If it is a acquisition we'll write supplier name, if it is a delivery we'll write client name
         TextView supplierOrClient_tv = rootView.findViewById(R.id.transaction_enterprise_tv);
-        String relationshipType = null;
         if(mTransactionType.equals(Constants.ACQUISITION)){
-            relationshipType = Constants.SUPPLIER;
+            mRelationshipType = Constants.SUPPLIER;
+            addEnterprise_btn.setText(R.string.add_supplier);
         } else if(mTransactionType.equals(Constants.DELIVERY)){
-            relationshipType = Constants.CLIENT;
+            mRelationshipType = Constants.CLIENT;
+            addEnterprise_btn.setText(R.string.add_client);
         }
-        supplierOrClient_tv.setText(getString(R.string.supplierOrEnterPrise, relationshipType));
+        supplierOrClient_tv.setText(getString(R.string.supplierOrEnterPrise, mRelationshipType));
 
         //Set some views
         quantity_et = rootView.findViewById(R.id.transaction_quantity_et);
@@ -99,7 +103,7 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         //Set enterprise spinner
         Spinner enterprise_spin = rootView.findViewById(R.id.enterprise_spinner);
         enterprise_spin.setOnItemSelectedListener(this);
-        enterpriseNames = DatabaseUtils.getEnterpriseNames(getActivity(), relationshipType);
+        enterpriseNames = DatabaseUtils.getEnterpriseNames(getActivity(), mRelationshipType);
         ArrayAdapter<String> enterpriseSpinAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, enterpriseNames);
         enterpriseSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         enterprise_spin.setAdapter(enterpriseSpinAdapter);
@@ -122,11 +126,29 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.change_date_btn){
-            DialogFragment newFragment = new DatePickerFragment();
-            newFragment.show(getChildFragmentManager(), "datePicker");
-        } else {
-            saveTransactionToDatabase();
+        int id = v.getId();
+        switch(id) {
+            case R.id.change_date_btn: {
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getChildFragmentManager(), "datePicker");
+                break;
+            }
+            case R.id.add_enterprise_btn: {
+                AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
+                Bundle args = new Bundle();
+                args.putString(Constants.RELATION_TYPE, mRelationshipType);
+                args.putString(Constants.REQUEST_CODE, Constants.ADD_TRANSACTION_FRAGMENT);
+                addSupplierFrag.setArguments(args);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.container, addSupplierFrag)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            }
+            case R.id.save_transaction_btn: {
+                saveTransactionToDatabase();
+                break;
+            }
         }
     }
 

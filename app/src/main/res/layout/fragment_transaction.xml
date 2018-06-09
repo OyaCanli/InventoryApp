@@ -31,10 +31,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@id/enterprise_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/add_enterprise_btn" />
 
     <TextView
         android:id="@+id/textView7"
@@ -98,7 +99,9 @@
     <TextView
         android:id="@+id/transaction_date_tv"
         style="@style/editTextStyle"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="18dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/change_date_btn"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@id/transaction_price_et"
         tools:text="28-05-18" />
@@ -119,26 +122,37 @@
         tools:layout_editor_absoluteX="91dp" />
 
     <Button
-        android:id="@+id/change_date_btn"
+        android:id="@+id/save_transaction_btn"
+        style="@style/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Change date"
+        android:layout_marginTop="@dimen/large_margin"
+        android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transaction_date_tv" />
 
-    <Button
-        android:id="@+id/save_transaction_btn"
+    <TextView
+        android:id="@+id/change_date_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:text="Save"
+        android:textStyle="italic"
+        android:textColor="@color/colorAccent"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginTop="8dp"
+        android:text="@string/change_date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/change_date_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/transaction_price_et" />
 
+    <TextView
+        android:id="@+id/add_enterprise_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="@+id/enterprise_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/enterprise_spinner"
+        tools:text="Add supplier" />
 
 </android.support.constraint.ConstraintLayout>

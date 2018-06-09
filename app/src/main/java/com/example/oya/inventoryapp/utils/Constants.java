@@ -18,6 +18,8 @@ public final class Constants {
 
     public final static String ADD_PRODUCT_FRAGMENT = "addProductFragment";
 
+    public final static String ADD_TRANSACTION_FRAGMENT = "addTransactionFragment";
+
     public final static String IS_FAB_CLICKED = "isFabClicked";
 
     public final static int PRODUCT_LOADER_ID = 1234;
@@ -25,8 +27,6 @@ public final class Constants {
     public final static int SINGLE_PRODUCT_LOADER = 1235;
 
     public final static int TRANSACTION_LOADER_ID = 4567;
-
-    public final static int SINGLE_TRANSACTION_LOADER = 4568;
 
     public final static int ENTERPRISE_LOADER_ID = 7894;
 
@@ -42,6 +42,8 @@ public final class Constants {
 
     public static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
 
-    public static final int REQUEST_STORAGE_PERMISSION = 1;
+    public static final int REQUEST_STORAGE_PERMISSION = 2;
+
+    public static int PICK_IMAGE_REQUEST = 3;
 
 }
