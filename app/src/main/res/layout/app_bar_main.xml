@@ -85,6 +85,7 @@
             android:gravity="center_horizontal"
             android:text="@string/acquisition"
             android:visibility="gone"
+            android:background="@color/hint_background"
             app:layout_constraintEnd_toEndOf="@+id/fab_acquisition"
             app:layout_constraintStart_toStartOf="@+id/fab_acquisition"
             app:layout_constraintTop_toTopOf="@id/fab_acquisition" />
@@ -97,6 +98,7 @@
             android:textSize="@dimen/hint_textsize"
             android:gravity="center_horizontal"
             android:visibility="gone"
+            android:background="@color/hint_background"
             app:layout_constraintEnd_toEndOf="@+id/fab_add_item"
             app:layout_constraintStart_toEndOf="@+id/fab_acquisition"
             app:layout_constraintTop_toTopOf="@id/fab_add_item" />
@@ -109,6 +111,7 @@
             android:textSize="@dimen/hint_textsize"
             android:gravity="center_horizontal"
             android:visibility="gone"
+            android:background="@color/hint_background"
             app:layout_constraintEnd_toEndOf="@+id/fab_delivery"
             app:layout_constraintStart_toStartOf="@+id/fab_delivery"
             app:layout_constraintTop_toTopOf="@+id/fab_delivery" />
@@ -121,6 +124,7 @@
             android:text="@string/cancel"
             android:visibility="gone"
             android:gravity="center_horizontal"
+            android:background="@color/hint_background"
             app:layout_constraintEnd_toEndOf="@+id/fab_main"
             app:layout_constraintStart_toStartOf="@+id/fab_main"
             app:layout_constraintTop_toTopOf="@+id/fab_main" />

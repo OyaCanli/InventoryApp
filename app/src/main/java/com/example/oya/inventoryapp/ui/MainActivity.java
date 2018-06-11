@@ -17,18 +17,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.utils.Constants;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener, ProductListFragment.EmptyProductListListener{
 
     private ActionBarDrawerToggle toggle;
+    private DrawerLayout drawer;
     private ConstraintLayout mConstraintLayout;
     private ConstraintSet mConstraintSet2;
     private ConstraintSet mConstraintSet1;
-    private FloatingActionButton fab_main;
+    private FloatingActionButton fab_main, fab_add_product, fab_delivery, fab_acquisition;
     private boolean fabsInClickedState = false;
     private TextView hint_main_tv, hint_add_item_tv, hint_acquisition_tv, hint_delivery_tv;
 
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         //Set navigation drawer
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -59,9 +63,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Find floating actions buttons and hint textviews
         fab_main =  findViewById(R.id.fab_main);
-        FloatingActionButton fab_add_product = findViewById(R.id.fab_add_item);
-        FloatingActionButton fab_delivery = findViewById(R.id.fab_delivery);
-        FloatingActionButton fab_acquisition = findViewById(R.id.fab_acquisition);
+        fab_add_product = findViewById(R.id.fab_add_item);
+        fab_delivery = findViewById(R.id.fab_delivery);
+        fab_acquisition = findViewById(R.id.fab_acquisition);
         hint_main_tv = findViewById(R.id.hint_cancel);
         hint_acquisition_tv = findViewById(R.id.hint_acquisition);
         hint_add_item_tv = findViewById(R.id.hint_add_product);
@@ -228,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
         }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -264,6 +267,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .replace(R.id.container, transactionFrag)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onProductListEmpty() {
+        if(!fabsInClickedState){
+            Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking_animation);
+            fab_main.startAnimation(animation);
+        }
     }
 
     //Custom transition used during the transition of constraint sets

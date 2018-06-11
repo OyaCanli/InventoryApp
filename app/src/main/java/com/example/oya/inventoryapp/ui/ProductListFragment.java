@@ -1,11 +1,13 @@
 package com.example.oya.inventoryapp.ui;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -26,6 +28,26 @@ public class ProductListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, ProductCursorAdapter.SaleOrderButtonsClickListener{
 
     private ProductCursorAdapter mCursorAdapter;
+    private EmptyProductListListener mCallback;
+    private Context mContext;
+
+    public interface EmptyProductListListener{
+        void onProductListEmpty();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mCallback = (EmptyProductListListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnImageClickListener");
+        }
+    }
 
     public ProductListFragment() {
     }
@@ -39,9 +61,10 @@ public class ProductListFragment extends Fragment implements
         mCursorAdapter = new ProductCursorAdapter(getActivity(), null, this);
         ListView listView = rootView.findViewById(R.id.list);
         listView.setAdapter(mCursorAdapter);
-        TextView empty_tv = rootView.findViewById(R.id.empty_view);
+        ConstraintLayout empty_screen = rootView.findViewById(R.id.empty_view);
+        TextView empty_tv = rootView.findViewById(R.id.empty_text);
         empty_tv.setText(R.string.no_products_found);
-        listView.setEmptyView(empty_tv);
+        listView.setEmptyView(empty_screen);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -65,12 +88,15 @@ public class ProductListFragment extends Fragment implements
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         String[] projection = {
                 ProductEntry._ID, ProductEntry.PRODUCT_NAME, ProductEntry.QUANTITY_IN_STOCK, ProductEntry.SALE_PRICE, ProductEntry.IMAGE_FILE_PATH};
-        return new CursorLoader(getActivity(), ProductEntry.CONTENT_URI, projection, null, null, null);
+        return new CursorLoader(mContext, ProductEntry.CONTENT_URI, projection, null, null, null);
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mCursorAdapter.swapCursor(data);
+        if(data == null || data.getCount() == 0){
+            mCallback.onProductListEmpty();
+        }
     }
 
     @Override
