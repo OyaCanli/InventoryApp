@@ -27,18 +27,15 @@ public class ProductCursorAdapter extends CursorAdapter{
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.list_item_product, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.list_item_product, parent, false);
+        ViewHolder holder = new ViewHolder(v);
+        v.setTag(holder);
+        return v;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-
-        TextView productName_tv = view.findViewById(R.id.product_item_product_name);
-        TextView price_tv = view.findViewById(R.id.product_item_price);
-        TextView quantity_tv = view.findViewById(R.id.product_item_quantity);
-        TextView sale_btn = view.findViewById(R.id.product_item_sale_btn);
-        TextView command_btn = view.findViewById(R.id.product_item_command_btn);
-        ImageView product_iv = view.findViewById(R.id.product_item_image);
+        ViewHolder holder = (ViewHolder) view.getTag();
 
         final long id = cursor.getLong(cursor.getColumnIndex(InventoryContract.ProductEntry._ID));
         final String productName = cursor.getString(cursor.getColumnIndex(InventoryContract.ProductEntry.PRODUCT_NAME));
@@ -46,27 +43,46 @@ public class ProductCursorAdapter extends CursorAdapter{
         float price = cursor.getFloat(cursor.getColumnIndex(InventoryContract.ProductEntry.SALE_PRICE));
         String imageFilePath = cursor.getString(cursor.getColumnIndex(InventoryContract.ProductEntry.IMAGE_FILE_PATH));
 
-        productName_tv.setText(productName);
-        quantity_tv.setText(mContext.getString(R.string.in_stock, quantity));
-        price_tv.setText(NumberFormat.getCurrencyInstance().format(price));
+        holder.productName_tv.setText(productName);
+        holder.quantity_tv.setText(mContext.getString(R.string.in_stock, quantity));
+        holder.price_tv.setText(NumberFormat.getCurrencyInstance().format(price));
         GlideApp.with(context)
                 .load(imageFilePath)
                 .centerCrop()
                 .placeholder(R.drawable.placeholder)
-                .into(product_iv);
+                .into(holder.product_iv);
 
-        sale_btn.setOnClickListener(new View.OnClickListener() {
+        holder.sale_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mTransactionBtnListener.onSaleOrOrderButtonClicked(v, id, productName);
             }
         });
-        command_btn.setOnClickListener(new View.OnClickListener() {
+        holder.command_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mTransactionBtnListener.onSaleOrOrderButtonClicked(v, id, productName);
             }
         });
+    }
+
+    private class ViewHolder{
+
+        final TextView productName_tv;
+        final TextView price_tv;
+        final TextView quantity_tv;
+        final TextView sale_btn;
+        final TextView command_btn;
+        final ImageView product_iv;
+
+        ViewHolder(View view){
+            this.productName_tv = view.findViewById(R.id.product_item_product_name);
+            this.price_tv = view.findViewById(R.id.product_item_price);
+            this.quantity_tv = view.findViewById(R.id.product_item_quantity);
+            this.sale_btn = view.findViewById(R.id.product_item_sale_btn);
+            this.command_btn = view.findViewById(R.id.product_item_command_btn);
+            this.product_iv = view.findViewById(R.id.product_item_image);
+        }
     }
 
     public interface SaleOrderButtonsClickListener{

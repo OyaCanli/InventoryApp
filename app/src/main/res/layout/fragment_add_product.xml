@@ -92,7 +92,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/add_supplier"
         android:textStyle="italic"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/supplierSpinner" />

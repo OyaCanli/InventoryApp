@@ -1,5 +1,6 @@
 package com.example.oya.inventoryapp.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -24,8 +25,10 @@ import android.widget.TextView;
 import com.example.oya.inventoryapp.R;
 import com.example.oya.inventoryapp.utils.Constants;
 
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        View.OnClickListener, ProductListFragment.EmptyProductListListener{
+        View.OnClickListener{
 
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FloatingActionButton fab_main, fab_add_product, fab_delivery, fab_acquisition;
     private boolean fabsInClickedState = false;
     private TextView hint_main_tv, hint_add_item_tv, hint_acquisition_tv, hint_delivery_tv;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +92,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             fabsInClickedState = savedInstanceState.getBoolean(Constants.IS_FAB_CLICKED);
             if(fabsInClickedState) showFourFABs();
+        }
+
+        preferences = getApplicationContext().getSharedPreferences("MyPref", 0);
+        editor = preferences.edit();
+        //This is for QuickStart. It will be shown only once at the first launch.
+        if((preferences.getInt(Constants.FIRST_TAPPROMPT_IS_SHOWN, 0) == 0)){
+            new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                    .setTarget(findViewById(R.id.fab_main))
+                    .setPrimaryText("Welcome to your mobile inventory. Let's get started!")
+                    .setSecondaryText("Tap the see more options")
+                    .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener()
+                    {
+                        @Override
+                        public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state)
+                        {
+                            if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
+                            {
+                                //showFourFABs();
+                            }
+                        }
+                    })
+                    .show();
+            editor.putInt(Constants.FIRST_TAPPROMPT_IS_SHOWN, 1);
+            editor.apply();
         }
     }
 
@@ -161,7 +190,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         }, 500);
+
+        //This is for QuickStart. It will be shown only once at the first launch.
+        if(preferences.getInt(Constants.SECOND_TAPPROMPT_IS_SHOWN, 0) == 0){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                            .setTarget(findViewById(R.id.fab_add_item))
+                            .setPrimaryText("Add your first product")
+                            .setSecondaryText("Tap to enter your first product")
+                            .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                                @Override
+                                public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+                                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+
+                                    }
+                                }
+                            })
+                            .show();
+                    editor.putInt(Constants.SECOND_TAPPROMPT_IS_SHOWN, 1);
+                    editor.apply();
+                }
+            }, 3000);
+        }
     }
+
+
 
     private void showSingleFAB(){
         TransitionManager.beginDelayedTransition(mConstraintLayout, new MainActivity.MyTransition());
@@ -267,14 +322,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .replace(R.id.container, transactionFrag)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    @Override
-    public void onProductListEmpty() {
-        if(!fabsInClickedState){
-            Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking_animation);
-            fab_main.startAnimation(animation);
-        }
     }
 
     //Custom transition used during the transition of constraint sets

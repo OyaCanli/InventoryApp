@@ -2,12 +2,15 @@ package com.example.oya.inventoryapp.ui;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,6 +50,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
+
 import static android.app.Activity.RESULT_OK;
 
 public class AddProductFragment extends Fragment implements View.OnClickListener,
@@ -80,7 +85,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_add_product, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_add_product, container, false);
         setHasOptionsMenu(true);
         //Find views
         productName_et = rootView.findViewById(R.id.editProductName);
@@ -115,6 +120,31 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         } else {
             getActivity().setTitle(getString(R.string.edit_product));
             getLoaderManager().initLoader(Constants.SINGLE_PRODUCT_LOADER, null, this);
+        }
+
+        SharedPreferences preferences = getActivity().getSharedPreferences("MyPref", 0);
+        final SharedPreferences.Editor editor = preferences.edit();
+
+        //This is for QuickStart. It will be shown only once at the first launch.
+        if(preferences.getInt(Constants.THIRD_TAPPROMPT_IS_SHOWN, 0) == 0) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new MaterialTapTargetPrompt.Builder(AddProductFragment.this)
+                            .setTarget(rootView.findViewById(R.id.add_supplier_btn))
+                            .setPrimaryText("If the supplier is not already in the list")
+                            .setSecondaryText("Tap to add new supplier")
+                            .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                                @Override
+                                public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+                                    //No need to add something here, that button already has a click listener
+                                }
+                            })
+                            .show();
+                    editor.putInt(Constants.THIRD_TAPPROMPT_IS_SHOWN, 1);
+                    editor.apply();
+                }
+            }, 2500);
         }
 
         return rootView;
@@ -428,6 +458,5 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
     }
 }

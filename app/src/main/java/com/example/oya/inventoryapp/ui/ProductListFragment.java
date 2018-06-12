@@ -28,25 +28,13 @@ public class ProductListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, ProductCursorAdapter.SaleOrderButtonsClickListener{
 
     private ProductCursorAdapter mCursorAdapter;
-    private EmptyProductListListener mCallback;
     private Context mContext;
 
-    public interface EmptyProductListListener{
-        void onProductListEmpty();
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-        // This makes sure that the host activity has implemented the callback interface
-        // If not, it throws an exception
-        try {
-            mCallback = (EmptyProductListListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnImageClickListener");
-        }
     }
 
     public ProductListFragment() {
@@ -94,9 +82,6 @@ public class ProductListFragment extends Fragment implements
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mCursorAdapter.swapCursor(data);
-        if(data == null || data.getCount() == 0){
-            mCallback.onProductListEmpty();
-        }
     }
 
     @Override
@@ -120,6 +105,12 @@ public class ProductListFragment extends Fragment implements
                 .replace(R.id.container, transactionFrag)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
     }
 }
 

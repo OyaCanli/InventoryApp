@@ -48,5 +48,10 @@ public final class Constants {
 
     public static final int PICK_IMAGE_REQUEST = 3;
 
+    public static final String FIRST_TAPPROMPT_IS_SHOWN = "firstTapPromptShown";
+
+    public static final String SECOND_TAPPROMPT_IS_SHOWN = "secondTapPromptShown";
+
+    public static final String THIRD_TAPPROMPT_IS_SHOWN = "thirdTapPromptShown";
 
 }
