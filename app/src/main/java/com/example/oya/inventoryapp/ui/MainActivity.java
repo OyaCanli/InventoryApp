@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         preferences = getApplicationContext().getSharedPreferences("MyPref", 0);
         editor = preferences.edit();
         //This is for QuickStart. It will be shown only once at the first launch.
-        if((preferences.getInt(Constants.FIRST_TAPPROMPT_IS_SHOWN, 0) == 0)){
+         if((preferences.getInt(Constants.FIRST_TAPPROMPT_IS_SHOWN, 0) == 0)){
             new MaterialTapTargetPrompt.Builder(MainActivity.this)
                     .setTarget(findViewById(R.id.fab_main))
                     .setPrimaryText("Welcome to your mobile inventory. Let's get started!")

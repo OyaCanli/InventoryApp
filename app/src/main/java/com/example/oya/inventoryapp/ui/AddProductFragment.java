@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -251,8 +252,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                 != PackageManager.PERMISSION_GRANTED) {
                             // If you do not have permission, request it
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            AddProductFragment.this.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                     Constants.REQUEST_STORAGE_PERMISSION);
                         } else {
                             // Launch the camera if the permission exists
@@ -323,9 +323,9 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
             }
         } else if (requestCode == Constants.PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Uri uri = data.getData();
+                mPhotoURI = data.getData();
                 GlideApp.with(getActivity())
-                        .load(uri)
+                        .load(mPhotoURI)
                         .into(productImage);
             }
         }
