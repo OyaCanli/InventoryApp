@@ -25,7 +25,7 @@ import com.example.oya.inventoryapp.data.InventoryContract.ProductEntry;
 import com.example.oya.inventoryapp.utils.Constants;
 
 public class ProductListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, ProductCursorAdapter.SaleOrderButtonsClickListener{
+        LoaderManager.LoaderCallbacks<Cursor>{
 
     private ProductCursorAdapter mCursorAdapter;
     private Context mContext;
@@ -46,7 +46,7 @@ public class ProductListFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_listview, container, false);
         getActivity().setTitle(getString(R.string.all_products));
 
-        mCursorAdapter = new ProductCursorAdapter(getActivity(), null, this);
+        mCursorAdapter = new ProductCursorAdapter(getActivity(), null);
         ListView listView = rootView.findViewById(R.id.list);
         listView.setAdapter(mCursorAdapter);
         ConstraintLayout empty_screen = rootView.findViewById(R.id.empty_view);
@@ -87,24 +87,6 @@ public class ProductListFragment extends Fragment implements
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
-    }
-
-    @Override
-    public void onSaleOrOrderButtonClicked(View v, long id, String productName) {
-        Bundle args = new Bundle();
-        if(v.getId() == R.id.product_item_sale_btn){
-            args.putString(Constants.TRANSACTION_TYPE, Constants.DELIVERY);
-            args.putString(Constants.PRODUCT_NAME, productName);
-        } else {
-            args.putString(Constants.TRANSACTION_TYPE, Constants.ACQUISITION);
-            args.putLong(Constants.PRODUCT_ID, id);
-        }
-        AddTransactionFragment transactionFrag = new AddTransactionFragment();
-        transactionFrag.setArguments(args);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, transactionFrag)
-                .addToBackStack(null)
-                .commit();
     }
 
     @Override

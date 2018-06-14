@@ -48,23 +48,4 @@
         app:layout_constraintTop_toBottomOf="@+id/product_item_price"
         tools:text="In stock: 10" />
 
-    <TextView
-        android:id="@+id/product_item_command_btn"
-        android:layout_width="wrap_content"
-        android:background="@drawable/rounded_corners_order"
-        android:text="@string/order"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/product_item_button_style" />
-
-    <TextView
-        android:id="@+id/product_item_sale_btn"
-        android:layout_width="0dp"
-        style="@style/product_item_button_style"
-        android:background="@drawable/rounded_corners_sale"
-        android:text="@string/sale"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/product_item_command_btn"
-        app:layout_constraintTop_toBottomOf="@+id/product_item_command_btn" />
-
 </android.support.constraint.ConstraintLayout>

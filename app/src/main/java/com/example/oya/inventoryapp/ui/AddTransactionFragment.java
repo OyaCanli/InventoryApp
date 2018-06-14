@@ -46,7 +46,6 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
     private static String mDate;
     private TextView quantity_in_stock_tv;
     private int mQuantityInStock;
-    private long mProductId;
     private String mRelationshipType = null;
     private String mEnterprisePhone = null;
 
@@ -60,16 +59,9 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
 
         /*This fragment is used both for acquisitions and deliveries.
         So we need to retrieve the info about the transaction type from the bundle*/
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             mTransactionType = bundle.getString(Constants.TRANSACTION_TYPE);
-            if (bundle.containsKey(Constants.PRODUCT_ID)) {
-                mProductId = bundle.getLong(Constants.PRODUCT_ID);
-            }
-            if (bundle.containsKey(Constants.PRODUCT_NAME)) {
-                productChosen = bundle.getString(Constants.PRODUCT_NAME);
-            }
         }
 
         //Set the corresponding title: New Acquisition or New Delivery
@@ -82,7 +74,6 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         saveTransaction_btn.setOnClickListener(this);
         TextView addEnterprise_btn = rootView.findViewById(R.id.add_enterprise_btn);
         addEnterprise_btn.setOnClickListener(this);
-        ImageView callEnterprise = rootView.findViewById(R.id.transaction_cal_btn);
 
         //Set the date to current date by default
         date_tv = rootView.findViewById(R.id.transaction_date_tv);
@@ -103,8 +94,6 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         quantity_et = rootView.findViewById(R.id.transaction_quantity_et);
         price_et = rootView.findViewById(R.id.transaction_price_et);
         quantity_in_stock_tv = rootView.findViewById(R.id.transaction_quantity_in_stock);
-        TextView enterprisePhone_tv = rootView.findViewById(R.id.transaction_enterprise_phone);
-        TextView phone_tv = rootView.findViewById(R.id.transaction_phone_tv);
 
         //Set enterprise spinner
         Spinner enterprise_spin = rootView.findViewById(R.id.enterprise_spinner);
@@ -122,33 +111,6 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         productSpinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         product_spin.setAdapter(productSpinAdapter);
 
-        if (mTransactionType.equals(Constants.ACQUISITION) && (mProductId != 0)) {
-            Cursor cursor = DatabaseUtils.mergeTables(getActivity(), mProductId);
-            cursor.moveToFirst();
-            int productNameColumnIndex = cursor.getColumnIndex(ProductEntry.PRODUCT_NAME);
-            int supplierNameColumnIndex = cursor.getColumnIndex(ProductEntry.SUPPLIER_NAME);
-            int enterprisePhoneColumnIndex = cursor.getColumnIndex(InventoryContract.EnterpriseEntry.ENTERPRISE_PHONE);
-
-            productChosen = cursor.getString(productNameColumnIndex);
-            enterpriseChosen = cursor.getString(supplierNameColumnIndex);
-            mEnterprisePhone = cursor.getString(enterprisePhoneColumnIndex);
-            cursor.close();
-
-            phone_tv.setVisibility(View.VISIBLE);
-            callEnterprise.setVisibility(View.VISIBLE);
-            callEnterprise.setOnClickListener(this);
-        }
-
-        //If user clicked this for a specific product set that product selected on the spinner
-        if (productChosen != null) {
-            product_spin.setSelection(productNames.indexOf(productChosen));
-        }
-        if (enterpriseChosen != null) {
-            enterprise_spin.setSelection(enterpriseNames.indexOf(enterpriseChosen));
-        }
-        if (mEnterprisePhone != null) {
-            enterprisePhone_tv.setText(mEnterprisePhone);
-        }
         return rootView;
     }
 
@@ -175,11 +137,6 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
             }
             case R.id.save_transaction_btn: {
                 saveTransactionToDatabase();
-                break;
-            }
-            case R.id.transaction_cal_btn:{
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", mEnterprisePhone, null));
-                getActivity().startActivity(intent);
                 break;
             }
         }

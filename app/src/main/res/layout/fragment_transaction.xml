@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginStart="24dp">
 
     <Spinner
         android:id="@+id/enterprise_spinner"
@@ -21,7 +22,6 @@
         style="@style/FieldStyle"
         app:layout_constraintBottom_toBottomOf="@+id/enterprise_spinner"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_marginStart="@dimen/margin_standard"
         tools:text="Supplier Name: " />
 
     <Spinner
@@ -30,11 +30,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_standard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_enterprise_phone" />
+        app:layout_constraintTop_toBottomOf="@+id/add_enterprise_btn" />
 
     <TextView
         android:id="@+id/textView7"
@@ -57,8 +57,9 @@
         android:id="@+id/transaction_quantity_in_stock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
         android:layout_margin="@dimen/margin_standard"
+        android:paddingStart="@dimen/half_padding"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/product_spinner"
@@ -149,43 +150,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:paddingStart="@dimen/half_padding"
         android:textColor="@color/colorAccent"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="@+id/enterprise_spinner"
         app:layout_constraintTop_toBottomOf="@+id/enterprise_spinner"
         tools:text="Add supplier" />
-
-    <TextView
-        android:id="@+id/transaction_enterprise_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/add_enterprise_btn"
-        tools:text="081666666" />
-
-    <TextView
-        android:id="@+id/transaction_phone_tv"
-        style="@style/FieldStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/phone"
-        android:visibility="invisible"
-        app:layout_constraintBaseline_toBaselineOf="@+id/transaction_enterprise_phone"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/transaction_cal_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/transaction_enterprise_phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/transaction_enterprise_phone"
-        app:srcCompat="@drawable/baseline_contact_phone_black_36" />
 
 </android.support.constraint.ConstraintLayout>
