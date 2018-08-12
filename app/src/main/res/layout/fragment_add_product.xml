@@ -16,6 +16,7 @@
         android:id="@+id/editProductName"
         style="@style/editTextStyle"
         android:layout_marginTop="@dimen/margin_standard"
+        android:inputType="textCapWords"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toEndOf="@+id/barrier"
@@ -31,6 +32,7 @@
     <EditText
         android:id="@+id/editSalePrice"
         style="@style/editTextStyle"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/editProductName" />
@@ -45,7 +47,7 @@
     <EditText
         android:id="@+id/editQuantity"
         style="@style/editTextStyle"
-        android:inputType="textEmailAddress"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/editSalePrice" />
@@ -60,7 +62,9 @@
     <Spinner
         android:id="@+id/supplierSpinner"
         style="@style/editTextStyle"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/half_margin"
+        app:layout_constraintEnd_toStartOf="@+id/add_supplier_btn"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/editQuantity" />
 
@@ -72,41 +76,16 @@
         app:constraint_referenced_ids="textView2,textView3,textView4,textView5"
         tools:layout_editor_absoluteX="91dp" />
 
-    <Button
-        android:id="@+id/save_btn"
-        style="@style/buttonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:text="@string/save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/product_details_gallery_image" />
-
-    <TextView
-        android:id="@+id/add_supplier_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="140dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_supplier"
-        android:textStyle="italic"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/supplierSpinner" />
-
     <ImageView
         android:id="@+id/product_details_gallery_image"
         android:layout_width="@dimen/product_details_image_height"
         android:layout_height="@dimen/product_details_image_height"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:contentDescription="@string/cd_product_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView"
         app:srcCompat="@drawable/galery" />
 
     <TextView
@@ -116,6 +95,18 @@
         android:text="@string/add_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_supplier_btn" />
+
+    <ImageButton
+        android:id="@+id/add_supplier_btn"
+        android:layout_width="@dimen/add_button_dimen"
+        android:layout_height="@dimen/add_button_dimen"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/half_margin"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editQuantity"
+        android:src="@drawable/ic_baseline_add"
+        android:contentDescription="@string/cd_add_supplier"/>
 
 
 </android.support.constraint.ConstraintLayout>

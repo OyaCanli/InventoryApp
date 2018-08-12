@@ -39,7 +39,7 @@
 
     <item
         android:id="@+id/new_transaction"
-        android:title="@string/new_transaction">
+        android:title="@string/newtransaction">
         <menu>
             <item
                 android:id="@+id/new_delivery"

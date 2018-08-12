@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.transition.Slide;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,11 +31,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.oya.inventoryapp.R;
@@ -90,12 +91,10 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         salePrice_et = rootView.findViewById(R.id.editSalePrice);
         quantity_et = rootView.findViewById(R.id.editQuantity);
         mSupplierSpin = rootView.findViewById(R.id.supplierSpinner);
-        Button save_product_btn = rootView.findViewById(R.id.save_btn);
-        TextView add_supplier_btn = rootView.findViewById(R.id.add_supplier_btn);
+        ImageButton add_supplier_btn = rootView.findViewById(R.id.add_supplier_btn);
         productImage = rootView.findViewById(R.id.product_details_gallery_image);
 
         //Set click listeners on buttons
-        save_product_btn.setOnClickListener(this);
         add_supplier_btn.setOnClickListener(this);
         productImage.setOnClickListener(this);
 
@@ -165,9 +164,17 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_delete){
-            openAlertDialogForDelete();
+        switch (item.getItemId()){
+            case R.id.action_delete:{
+                openAlertDialogForDelete();
+                break;
+            }
+            case R.id.action_save:{
+                saveProduct();
+                break;
+            }
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -210,14 +217,11 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.save_btn: {
-                //This button saves the new product to the database
-                saveProduct();
-                break;
-            }
             case R.id.add_supplier_btn: {
                 //This button opens a new fragment for adding a new supplier
                 AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
+                addSupplierFrag.setEnterTransition(new Slide(Gravity.END));
+                addSupplierFrag.setExitTransition(new Slide(Gravity.START));
                 Bundle args = new Bundle();
                 args.putString(Constants.RELATION_TYPE, Constants.SUPPLIER);
                 args.putString(Constants.REQUEST_CODE, Constants.ADD_PRODUCT_FRAGMENT);
@@ -394,6 +398,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                 Toast.makeText(getActivity(), R.string.error_saving_product, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.product_saved_successfully), Toast.LENGTH_SHORT).show();
+                getFragmentManager().popBackStack();
             }
         } else {
             // Otherwise this is an existing product, so update the product
@@ -402,6 +407,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                 Toast.makeText(getActivity(), R.string.error_saving_product, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.product_saved_successfully), Toast.LENGTH_SHORT).show();
+                getFragmentManager().popBackStack();
             }
         }
     }
@@ -439,17 +445,16 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
             float price = cursor.getFloat(priceColumnIndex);
             String supplierName = cursor.getString(supplierColumnIndex);
             String imagePath = cursor.getString(imageColumnIndex);
-            Uri imageUri = Uri.parse(imagePath);
+            mPhotoURI = Uri.parse(imagePath);
 
             productName_et.setText(productName);
             salePrice_et.setText(String.valueOf(price));
             quantity_et.setText(String.valueOf(quantity));
             mSupplierSpin.setSelection(mSpinAdapter.getPosition(supplierName));
             GlideApp.with(getActivity())
-                    .load(imageUri)
+                    .load(mPhotoURI)
                     .placeholder(R.drawable.placeholder)
                     .into(productImage);
-
         }
     }
 

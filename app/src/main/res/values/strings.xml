@@ -23,12 +23,12 @@
     <string name="all_enterprises">All %1$ss</string>
     <string name="new_transaction">New %1$s</string>
     <string name="all_transactions">All transactions</string>
-    <string name="all_products">All products</string>
+    <string name="all_products">All Products</string>
     <string name="acquisition">Acquisition</string>
     <string name="delivery">Delivery</string>
     <string name="cancel">Cancel</string>
     <string name="error_saving_product">Error with saving product</string>
-    <string name="product_saved_successfully">Product saved with row id:</string>
+    <string name="product_saved_successfully">Product saved successfully</string>
     <string name="no_supplier_chosen">You didn\'t chose a supplier</string>
     <string name="product_name_empty">Product name cannot be empty</string>
     <string name="acquisition_title">Acquisition of %1$d %2$s from the supplier %3$s</string>
@@ -52,7 +52,6 @@
     <string name="e_mail">E-mail:</string>
     <string name="phone">Phone:</string>
     <string name="contact_person">Contact person:</string>
-    <string name="save">Save</string>
     <string name="product_name">Product Name:</string>
     <string name="sale_price">Sale Price:</string>
     <string name="in_stock_alone">In stock:</string>
@@ -64,6 +63,11 @@
     <string name="see_all">SEE ALL:</string>
     <string name="add">ADD:</string>
     <string name="no_transactions_found">No transaction reports found. You can realize a new delivery or acquisition by clicking on + button or from the menu.</string>
+    <string name="cd_add_supplier">Button for adding a new supplier, if supplier is not already on the list</string>
+    <string name="cd_product_image">Image of the product, if available</string>
+    <string name="save">Save</string>
+    <string name="newtransaction">New Transaction</string>
+    <string name="date">Date:</string>
 
     <string-array name="dialog_options">
         <item>Take an image</item>

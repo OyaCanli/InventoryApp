@@ -1,22 +1,25 @@
 package com.example.oya.inventoryapp.ui;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.transition.Slide;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,16 +50,16 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
     private TextView quantity_in_stock_tv;
     private int mQuantityInStock;
     private String mRelationshipType = null;
-    private String mEnterprisePhone = null;
 
     public AddTransactionFragment() {
+        setHasOptionsMenu(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_transaction, container, false);
-
+        setHasOptionsMenu(true);
         /*This fragment is used both for acquisitions and deliveries.
         So we need to retrieve the info about the transaction type from the bundle*/
         Bundle bundle = getArguments();
@@ -70,9 +73,7 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         //Set clickListeners to buttons
         TextView changeDate_btn = rootView.findViewById(R.id.change_date_btn);
         changeDate_btn.setOnClickListener(this);
-        Button saveTransaction_btn = rootView.findViewById(R.id.save_transaction_btn);
-        saveTransaction_btn.setOnClickListener(this);
-        TextView addEnterprise_btn = rootView.findViewById(R.id.add_enterprise_btn);
+        ImageButton addEnterprise_btn = rootView.findViewById(R.id.add_enterprise_btn);
         addEnterprise_btn.setOnClickListener(this);
 
         //Set the date to current date by default
@@ -83,10 +84,8 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         TextView supplierOrClient_tv = rootView.findViewById(R.id.transaction_enterprise_tv);
         if (mTransactionType.equals(Constants.ACQUISITION)) {
             mRelationshipType = Constants.SUPPLIER;
-            addEnterprise_btn.setText(R.string.add_supplier);
         } else if (mTransactionType.equals(Constants.DELIVERY)) {
             mRelationshipType = Constants.CLIENT;
-            addEnterprise_btn.setText(R.string.add_client);
         }
         supplierOrClient_tv.setText(getString(R.string.supplierOrEnterPrise, mRelationshipType));
 
@@ -125,6 +124,8 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
             }
             case R.id.add_enterprise_btn: {
                 AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
+                addSupplierFrag.setEnterTransition(new Slide(Gravity.END));
+                addSupplierFrag.setExitTransition(new Slide(Gravity.START));
                 Bundle args = new Bundle();
                 args.putString(Constants.RELATION_TYPE, mRelationshipType);
                 args.putString(Constants.REQUEST_CODE, Constants.ADD_TRANSACTION_FRAGMENT);
@@ -135,11 +136,24 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
                         .commit();
                 break;
             }
-            case R.id.save_transaction_btn: {
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_with_save, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_save: {
                 saveTransactionToDatabase();
                 break;
             }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private ArrayList<String> getProductNames() {

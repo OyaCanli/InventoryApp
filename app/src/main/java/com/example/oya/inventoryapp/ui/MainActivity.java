@@ -9,6 +9,7 @@ import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.transition.Fade;
+import android.support.transition.Slide;
 import android.support.transition.TransitionManager;
 import android.support.transition.TransitionSet;
 import android.support.v4.view.GravityCompat;
@@ -16,10 +17,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.example.oya.inventoryapp.R;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ConstraintLayout mConstraintLayout;
     private ConstraintSet mConstraintSet2;
     private ConstraintSet mConstraintSet1;
-    private FloatingActionButton fab_main, fab_add_product, fab_delivery, fab_acquisition;
+    private FloatingActionButton fab_main;
     private boolean fabsInClickedState = false;
     private TextView hint_main_tv, hint_add_item_tv, hint_acquisition_tv, hint_delivery_tv;
     SharedPreferences preferences;
@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Find floating actions buttons and hint textviews
         fab_main =  findViewById(R.id.fab_main);
-        fab_add_product = findViewById(R.id.fab_add_item);
-        fab_delivery = findViewById(R.id.fab_delivery);
-        fab_acquisition = findViewById(R.id.fab_acquisition);
+        FloatingActionButton fab_add_product = findViewById(R.id.fab_add_item);
+        FloatingActionButton fab_delivery = findViewById(R.id.fab_delivery);
+        FloatingActionButton fab_acquisition = findViewById(R.id.fab_acquisition);
         hint_main_tv = findViewById(R.id.hint_cancel);
         hint_acquisition_tv = findViewById(R.id.hint_acquisition);
         hint_add_item_tv = findViewById(R.id.hint_add_product);
@@ -85,9 +85,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Add product list fragment as the default fragment
         if(savedInstanceState == null) {
             ProductListFragment productListFrag = new ProductListFragment();
+            productListFrag.setEnterTransition(new Slide(Gravity.END));
+            productListFrag.setExitTransition(new Slide(Gravity.START));
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, productListFrag)
-                    .addToBackStack(null)
                     .commit();
         } else {
             fabsInClickedState = savedInstanceState.getBoolean(Constants.IS_FAB_CLICKED);
@@ -155,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.fab_add_item:{
                 AddProductFragment addProductFrag = new AddProductFragment();
+                addProductFrag.setEnterTransition(new Slide(Gravity.END));
+                addProductFrag.setExitTransition(new Slide(Gravity.START));
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, addProductFrag)
                         .addToBackStack(null)
@@ -187,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void run() {
                 fab_main.setImageResource(R.drawable.restart_white_32);
-
             }
         }, 500);
 
@@ -198,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void run() {
                     new MaterialTapTargetPrompt.Builder(MainActivity.this)
                             .setTarget(findViewById(R.id.fab_add_item))
+                            .setBackgroundColour(getResources().getColor(R.color.colorPrimary))
                             .setPrimaryText("Add your first product")
                             .setSecondaryText("Tap to enter your first product")
                             .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
@@ -240,6 +243,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id){
             case R.id.products:{
                 ProductListFragment productListFrag = new ProductListFragment();
+                productListFrag.setEnterTransition(new Slide(Gravity.END));
+                productListFrag.setExitTransition(new Slide(Gravity.START));
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, productListFrag)
                         .addToBackStack(null)
@@ -256,6 +261,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.add_product:{
                 AddProductFragment addProductFrag = new AddProductFragment();
+                addProductFrag.setEnterTransition(new Slide(Gravity.END));
+                addProductFrag.setExitTransition(new Slide(Gravity.START));
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, addProductFrag)
                         .addToBackStack(null)
@@ -280,6 +287,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.transaction_list:{
                 TransactionListFragment transactionListFrag = new TransactionListFragment();
+                transactionListFrag.setEnterTransition(new Slide(Gravity.END));
+                transactionListFrag.setExitTransition(new Slide(Gravity.START));
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, transactionListFrag)
                         .addToBackStack(null)
@@ -292,18 +301,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void openEnterpriseListFragment(String relationshipType){
-        EnterpriseListFragment supplierListFrag = new EnterpriseListFragment();
+        EnterpriseListFragment enterpriseListFrag = new EnterpriseListFragment();
+        enterpriseListFrag.setEnterTransition(new Slide(Gravity.END));
+        enterpriseListFrag.setExitTransition(new Slide(Gravity.START));
         Bundle args = new Bundle();
         args.putString(Constants.RELATION_TYPE, relationshipType);
-        supplierListFrag.setArguments(args);
+        enterpriseListFrag.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, supplierListFrag)
+                .replace(R.id.container, enterpriseListFrag)
                 .addToBackStack(null)
                 .commit();
     }
 
     private void openAddEnterPriseFragment(String relationType) {
         AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
+        addSupplierFrag.setEnterTransition(new Slide(Gravity.END));
+        addSupplierFrag.setExitTransition(new Slide(Gravity.START));
         Bundle args = new Bundle();
         args.putString(Constants.RELATION_TYPE, relationType);
         addSupplierFrag.setArguments(args);
@@ -315,6 +328,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void openAddTransactionFragment(String transactionType){
         AddTransactionFragment transactionFrag = new AddTransactionFragment();
+        transactionFrag.setEnterTransition(new Slide(Gravity.END));
+        transactionFrag.setExitTransition(new Slide(Gravity.START));
         Bundle args = new Bundle();
         args.putString(Constants.TRANSACTION_TYPE, transactionType);
         transactionFrag.setArguments(args);

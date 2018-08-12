@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.transition.Slide;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +57,8 @@ public class EnterpriseListFragment extends Fragment implements
     @Override
     public void onItemClicked(long id) {
         AddEnterpriseFragment addSupplierFrag = new AddEnterpriseFragment();
+        addSupplierFrag.setEnterTransition(new Slide(Gravity.END));
+        addSupplierFrag.setExitTransition(new Slide(Gravity.START));
         Bundle args = new Bundle();
         args.putString(Constants.RELATION_TYPE, mTypeOfRelationship);
         Uri currentEnterpriseUri = ContentUris.withAppendedId(InventoryContract.EnterpriseEntry.CONTENT_URI, id);

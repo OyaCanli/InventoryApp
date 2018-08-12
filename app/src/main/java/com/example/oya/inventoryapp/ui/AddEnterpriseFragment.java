@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,7 +26,7 @@ import com.example.oya.inventoryapp.data.InventoryContract;
 import com.example.oya.inventoryapp.data.InventoryContract.EnterpriseEntry;
 import com.example.oya.inventoryapp.utils.Constants;
 
-public class AddEnterpriseFragment extends Fragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor>{
+public class AddEnterpriseFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private EditText enterpriseName_et;
     private EditText enterpriseAddress_et;
@@ -35,7 +34,6 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
     private EditText enterprisePhone_et;
     private EditText enterpriseContactPerson_et;
     private String mTypeOfRelationship;
-    private boolean mUserIsAddingAProduct;
     private Uri mCurrentEnterpriseUri;
 
     public AddEnterpriseFragment() {
@@ -49,9 +47,6 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
         setHasOptionsMenu(true);
         Bundle bundle = getArguments();
         mTypeOfRelationship = bundle.getString(Constants.RELATION_TYPE);
-        if(bundle.containsKey(Constants.REQUEST_CODE)){
-            mUserIsAddingAProduct = true;
-        }
         String uriString = null;
         if(bundle.containsKey(Constants.ENTERPRISE_URI)){
             uriString = bundle.getString(Constants.ENTERPRISE_URI);
@@ -74,17 +69,7 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
         enterpriseEmail_et = rootView.findViewById(R.id.editSupplierEMail);
         enterprisePhone_et = rootView.findViewById(R.id.editSupplierPhone);
         enterpriseContactPerson_et = rootView.findViewById(R.id.editContactPerson);
-        Button save_supplier_btn = rootView.findViewById(R.id.save_enterprise_btn);
-        save_supplier_btn.setOnClickListener(this);
         return rootView;
-    }
-
-    @Override
-    public void onClick(View v) {
-        saveSupplier();
-        if(mUserIsAddingAProduct){
-            getActivity().onBackPressed();
-        }
     }
 
     private void saveSupplier(){
@@ -110,6 +95,7 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
                 Toast.makeText(getActivity(), R.string.error_saving, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), R.string.enterprise_successfully_saved, Toast.LENGTH_SHORT).show();
+                getFragmentManager().popBackStack();
             }
         } else{
             // Otherwise this is an existing enterprise, so update the entry
@@ -118,6 +104,7 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
                 Toast.makeText(getActivity(), R.string.error_updating, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), R.string.successfully_updated, Toast.LENGTH_SHORT).show();
+                getFragmentManager().popBackStack();
             }
         }
     }
@@ -139,8 +126,15 @@ public class AddEnterpriseFragment extends Fragment implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_delete){
-            openAlertDialogForDelete();
+        switch(item.getItemId()) {
+            case R.id.action_delete: {
+                openAlertDialogForDelete();
+                break;
+            }
+            case R.id.action_save: {
+                saveSupplier();
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
