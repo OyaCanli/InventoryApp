@@ -22,6 +22,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -316,7 +317,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         pickImageDialog.dismiss();
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                GlideApp.with(getActivity())
+                GlideApp.with(AddProductFragment.this)
                         .load(mPhotoURI)
                         .into(productImage);
             } else {
@@ -325,7 +326,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         } else if (requestCode == Constants.PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
                 mPhotoURI = data.getData();
-                GlideApp.with(getActivity())
+                GlideApp.with(AddProductFragment.this)
                         .load(mPhotoURI)
                         .into(productImage);
             }
@@ -430,6 +431,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+        Log.d("AddProduct", "onloadFinished called");
         if (cursor == null || cursor.getCount() < 1) {
             return;
         }
@@ -445,14 +447,13 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
             float price = cursor.getFloat(priceColumnIndex);
             String supplierName = cursor.getString(supplierColumnIndex);
             String imagePath = cursor.getString(imageColumnIndex);
-            mPhotoURI = Uri.parse(imagePath);
-
+            Uri uriToShow = mPhotoURI == null ? Uri.parse(imagePath) : mPhotoURI;
             productName_et.setText(productName);
             salePrice_et.setText(String.valueOf(price));
             quantity_et.setText(String.valueOf(quantity));
             mSupplierSpin.setSelection(mSpinAdapter.getPosition(supplierName));
             GlideApp.with(getActivity())
-                    .load(mPhotoURI)
+                    .load(uriToShow)
                     .placeholder(R.drawable.placeholder)
                     .into(productImage);
         }
