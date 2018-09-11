@@ -390,7 +390,8 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         values.put(ProductEntry.SALE_PRICE, salePrice);
         values.put(ProductEntry.QUANTITY_IN_STOCK, quantityInStock);
         values.put(ProductEntry.SUPPLIER_NAME, chosenSupplierName);
-        values.put(ProductEntry.IMAGE_FILE_PATH, mPhotoURI.toString());
+        String photoUri = mPhotoURI == null ? null : mPhotoURI.toString();
+        values.put(ProductEntry.IMAGE_FILE_PATH, photoUri);
 
         if (mCurrentProductUri == null) {
             //This is new product entry
@@ -447,7 +448,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
             float price = cursor.getFloat(priceColumnIndex);
             String supplierName = cursor.getString(supplierColumnIndex);
             String imagePath = cursor.getString(imageColumnIndex);
-            Uri uriToShow = mPhotoURI == null ? Uri.parse(imagePath) : mPhotoURI;
+            String uriToShow = mPhotoURI == null ? imagePath : mPhotoURI.toString();
             productName_et.setText(productName);
             salePrice_et.setText(String.valueOf(price));
             quantity_et.setText(String.valueOf(quantity));
