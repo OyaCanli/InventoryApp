@@ -1,112 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-    <TextView
-        android:id="@+id/textView2"
-        style="@style/FieldStyle"
-        android:text="@string/product_name"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editProductName"
-        app:layout_constraintStart_toStartOf="parent" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/editProductName"
-        style="@style/editTextStyle"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:inputType="textCapWords"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/FieldStyle"
+            android:text="@string/product_name"
+            app:layout_constraintBaseline_toBaselineOf="@+id/editProductName"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView3"
-        style="@style/FieldStyle"
-        android:text="@string/sale_price"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editSalePrice"
-        app:layout_constraintStart_toStartOf="parent" />
+        <EditText
+            android:id="@+id/editProductName"
+            style="@style/editTextStyle"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:inputType="textCapWords"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editSalePrice"
-        style="@style/editTextStyle"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/editProductName" />
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/FieldStyle"
+            android:text="@string/sale_price"
+            app:layout_constraintBaseline_toBaselineOf="@+id/editSalePrice"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView4"
-        style="@style/FieldStyle"
-        android:text="@string/in_stock_alone"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editQuantity"
-        app:layout_constraintStart_toStartOf="parent" />
+        <EditText
+            android:id="@+id/editSalePrice"
+            style="@style/editTextStyle"
+            android:inputType="numberDecimal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@+id/editProductName" />
 
-    <EditText
-        android:id="@+id/editQuantity"
-        style="@style/editTextStyle"
-        android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/editSalePrice" />
+        <TextView
+            android:id="@+id/textView4"
+            style="@style/FieldStyle"
+            android:text="@string/in_stock_alone"
+            app:layout_constraintBaseline_toBaselineOf="@+id/editQuantity"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView5"
-        style="@style/FieldStyle"
-        android:text="@string/supplier"
-        app:layout_constraintBottom_toBottomOf="@+id/supplierSpinner"
-        app:layout_constraintStart_toStartOf="parent" />
+        <EditText
+            android:id="@+id/editQuantity"
+            style="@style/editTextStyle"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@+id/editSalePrice" />
 
-    <Spinner
-        android:id="@+id/supplierSpinner"
-        style="@style/editTextStyle"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="@dimen/half_margin"
-        app:layout_constraintEnd_toStartOf="@+id/add_supplier_btn"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/editQuantity" />
+        <TextView
+            android:id="@+id/textView5"
+            style="@style/FieldStyle"
+            android:text="@string/supplier"
+            app:layout_constraintBottom_toBottomOf="@+id/supplierSpinner"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <android.support.constraint.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="right"
-        app:constraint_referenced_ids="textView2,textView3,textView4,textView5"
-        tools:layout_editor_absoluteX="91dp" />
+        <Spinner
+            android:id="@+id/supplierSpinner"
+            style="@style/editTextStyle"
+            android:layout_marginTop="@dimen/half_margin"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/add_supplier_btn"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@+id/editQuantity" />
 
-    <ImageView
-        android:id="@+id/product_details_gallery_image"
-        android:layout_width="@dimen/product_details_image_height"
-        android:layout_height="@dimen/product_details_image_height"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:contentDescription="@string/cd_product_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView"
-        app:srcCompat="@drawable/galery" />
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="right"
+            app:constraint_referenced_ids="textView2,textView3,textView4,textView5"
+            tools:layout_editor_absoluteX="91dp" />
 
-    <TextView
-        android:id="@+id/textView"
-        style="@style/FieldStyle"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:text="@string/add_image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_supplier_btn" />
+        <ImageView
+            android:id="@+id/product_details_gallery_image"
+            android:layout_width="@dimen/product_details_image_height"
+            android:layout_height="@dimen/product_details_image_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/cd_product_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView"
+            app:srcCompat="@drawable/ic_gallery" />
 
-    <ImageButton
-        android:id="@+id/add_supplier_btn"
-        android:layout_width="@dimen/add_button_dimen"
-        android:layout_height="@dimen/add_button_dimen"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/half_margin"
-        android:background="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editQuantity"
-        android:src="@drawable/ic_baseline_add"
-        android:contentDescription="@string/cd_add_supplier"/>
+        <TextView
+            android:id="@+id/textView"
+            style="@style/FieldStyle"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:text="@string/add_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_supplier_btn" />
+
+        <ImageButton
+            android:id="@+id/add_supplier_btn"
+            android:layout_width="@dimen/add_button_dimen"
+            android:layout_height="@dimen/add_button_dimen"
+            android:layout_marginTop="@dimen/half_margin"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/cd_add_supplier"
+            app:srcCompat="@drawable/ic_baseline_add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editQuantity" />
 
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

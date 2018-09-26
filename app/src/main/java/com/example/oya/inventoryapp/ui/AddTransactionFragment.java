@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.transition.Slide;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,6 +51,7 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
     private TextView quantity_in_stock_tv;
     private int mQuantityInStock;
     private String mRelationshipType = null;
+    private static final String TAG = "AddTransactionFragment";
 
     public AddTransactionFragment() {
         setHasOptionsMenu(true);
@@ -266,13 +268,20 @@ public class AddTransactionFragment extends Fragment implements View.OnClickList
         int rowsAffected = getActivity().getContentResolver().update(ProductEntry.CONTENT_URI, valuesForUpdate, ProductEntry.PRODUCT_NAME + "=?", selectionArg);
         if (rowsAffected == 0) {
             // If no rows were affected, then there was an error with the update.
-            Toast.makeText(getActivity(), "Error updating quantity",
-                    Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Error updating quantity");
         } else {
-            // Otherwise, the update was successful and we can display a toast.
-            Toast.makeText(getActivity(), "Quantity updated successfully",
-                    Toast.LENGTH_SHORT).show();
+            // Otherwise, the update was successful
+            Log.d(TAG, "Quantity updated successfully");
         }
+
+        //Once saved, close AddTransaction fragment and open TransactionListFragment
+        TransactionListFragment transactionListFrag = new TransactionListFragment();
+        transactionListFrag.setEnterTransition(new Slide(Gravity.END));
+        transactionListFrag.setExitTransition(new Slide(Gravity.START));
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, transactionListFrag)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

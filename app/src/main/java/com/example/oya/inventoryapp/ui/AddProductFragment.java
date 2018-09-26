@@ -72,7 +72,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     private Uri mPhotoURI;
     private int mUsersChoice;
 
-    final DialogInterface.OnClickListener mDialogClickListener = new DialogInterface.OnClickListener() {
+    private final DialogInterface.OnClickListener mDialogClickListener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int item) {
             mUsersChoice = item;
         }
@@ -129,18 +129,18 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                 @Override
                 public void run() {
                     new MaterialTapTargetPrompt.Builder(AddProductFragment.this)
+                            .setBackgroundColour(getResources().getColor(R.color.colorPrimary))
                             .setTarget(rootView.findViewById(R.id.add_supplier_btn))
                             .setPrimaryText("If the supplier is not already in the list")
                             .setSecondaryText("Tap to add new supplier")
                             .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
                                 @Override
-                                public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                                    //No need to add something here, that button already has a click listener
+                                public void onPromptStateChanged(@NonNull MaterialTapTargetPrompt prompt, int state) {
+                                    editor.putInt(Constants.THIRD_TAPPROMPT_IS_SHOWN, 1);
+                                    editor.apply();
                                 }
                             })
                             .show();
-                    editor.putInt(Constants.THIRD_TAPPROMPT_IS_SHOWN, 1);
-                    editor.apply();
                 }
             }, 2500);
         }

@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FloatingActionButton fab_main;
     private boolean fabsInClickedState = false;
     private TextView hint_main_tv, hint_add_item_tv, hint_acquisition_tv, hint_delivery_tv;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab_delivery.setOnClickListener(this);
         fab_acquisition.setOnClickListener(this);
 
+        //Initialize shared preferences and the editor
+        preferences = getApplicationContext().getSharedPreferences("MyPref", 0);
+        editor = preferences.edit();
+
         //Add product list fragment as the default fragment
         if(savedInstanceState == null) {
             ProductListFragment productListFrag = new ProductListFragment();
@@ -95,28 +99,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(fabsInClickedState) showFourFABs();
         }
 
-        preferences = getApplicationContext().getSharedPreferences("MyPref", 0);
-        editor = preferences.edit();
         //This is for QuickStart. It will be shown only once at the first launch.
          if((preferences.getInt(Constants.FIRST_TAPPROMPT_IS_SHOWN, 0) == 0)){
             new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                    .setBackgroundColour(getResources().getColor(R.color.colorPrimary))
                     .setTarget(findViewById(R.id.fab_main))
                     .setPrimaryText("Welcome to your mobile inventory. Let's get started!")
                     .setSecondaryText("Tap the see more options")
-                    .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener()
-                    {
+                    .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
                         @Override
-                        public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state)
-                        {
-                            if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                            {
-                                //showFourFABs();
-                            }
+                        public void onPromptStateChanged(@NonNull MaterialTapTargetPrompt prompt, int state) {
+                            editor.putInt(Constants.FIRST_TAPPROMPT_IS_SHOWN, 1);
+                            editor.apply();
                         }
                     })
                     .show();
-            editor.putInt(Constants.FIRST_TAPPROMPT_IS_SHOWN, 1);
-            editor.apply();
         }
     }
 
@@ -201,19 +198,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new MaterialTapTargetPrompt.Builder(MainActivity.this)
                             .setTarget(findViewById(R.id.fab_add_item))
                             .setBackgroundColour(getResources().getColor(R.color.colorPrimary))
-                            .setPrimaryText("Add your first product")
-                            .setSecondaryText("Tap to enter your first product")
+                            .setPrimaryText(R.string.add_your_first_product)
+                            .setSecondaryText(R.string.tap_to_enter_first_product)
                             .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
                                 @Override
-                                public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-
-                                    }
+                                public void onPromptStateChanged(@NonNull MaterialTapTargetPrompt prompt, int state) {
+                                    editor.putInt(Constants.SECOND_TAPPROMPT_IS_SHOWN, 1);
+                                    editor.apply();
                                 }
                             })
                             .show();
-                    editor.putInt(Constants.SECOND_TAPPROMPT_IS_SHOWN, 1);
-                    editor.apply();
                 }
             }, 3000);
         }

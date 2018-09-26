@@ -66,8 +66,12 @@
     <string name="cd_add_supplier">Button for adding a new supplier, if supplier is not already on the list</string>
     <string name="cd_product_image">Image of the product, if available</string>
     <string name="save">Save</string>
-    <string name="newtransaction">New Transaction</string>
+    <string name="newtransaction">NEW TRANSACTION</string>
     <string name="date">Date:</string>
+    <string name="cd_app_icon">Inventory icon, shown when list is empty</string>
+    <string name="cd_add_enterprise_btn">The button for adding new enterprise, if it is not already on the list</string>
+    <string name="add_your_first_product">Add your first product</string>
+    <string name="tap_to_enter_first_product">Tap to enter your first product</string>
 
     <string-array name="dialog_options">
         <item>Take an image</item>

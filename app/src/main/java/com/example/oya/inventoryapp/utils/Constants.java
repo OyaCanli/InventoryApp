@@ -36,10 +36,6 @@ public final class Constants {
 
     public final static String PRODUCT_URI = "productUri";
 
-    public final static String PRODUCT_ID = "productId";
-
-    public final static String PRODUCT_NAME = "productName";
-
     public final static String ENTERPRISE_URI = "enterpriseUri";
 
     public final static String IS_FAB_CLICKED = "isFabClicked";

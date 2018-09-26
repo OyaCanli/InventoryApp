@@ -1,151 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/enterprise_spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/margin_standard"
-        app:layout_constraintEnd_toStartOf="@+id/add_enterprise_btn"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/transaction_enterprise_tv"
-        style="@style/FieldStyle"
-        app:layout_constraintBottom_toBottomOf="@+id/enterprise_spinner"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="Supplier Name: " />
+        <Spinner
+            android:id="@+id/enterprise_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/add_enterprise_btn"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/product_spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/margin_standard"
-        app:layout_constraintEnd_toStartOf="@+id/add_enterprise_btn"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/add_enterprise_btn" />
+        <TextView
+            android:id="@+id/transaction_enterprise_tv"
+            style="@style/FieldStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/enterprise_spinner"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Supplier Name: " />
 
-    <TextView
-        android:id="@+id/textView7"
-        style="@style/FieldStyle"
-        android:text="@string/product_name"
-        app:layout_constraintBottom_toBottomOf="@+id/product_spinner"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Spinner
+            android:id="@+id/product_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/add_enterprise_btn"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@+id/add_enterprise_btn" />
 
-    <TextView
-        android:id="@+id/textView11"
-        style="@style/FieldStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/quantity_in_stock"
-        android:textStyle="italic"
-        app:layout_constraintBaseline_toBaselineOf="@id/transaction_quantity_in_stock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView7" />
+        <TextView
+            android:id="@+id/textView7"
+            style="@style/FieldStyle"
+            android:text="@string/product_name"
+            app:layout_constraintBottom_toBottomOf="@+id/product_spinner"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/transaction_quantity_in_stock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_standard"
-        android:padding="@dimen/half_padding"
-        android:textStyle="italic"
-        android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/product_spinner"
-        tools:text="20" />
+        <TextView
+            android:id="@+id/textView11"
+            style="@style/FieldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quantity_in_stock"
+            android:textStyle="italic"
+            app:layout_constraintBaseline_toBaselineOf="@id/transaction_quantity_in_stock"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView7" />
 
-    <EditText
-        android:id="@+id/transaction_quantity_et"
-        style="@style/editTextStyle"
-        android:ems="10"
-        android:inputType="number"
-        android:padding="@dimen/half_padding"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_quantity_in_stock" />
+        <TextView
+            android:id="@+id/transaction_quantity_in_stock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_standard"
+            android:padding="@dimen/half_padding"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@+id/product_spinner"
+            tools:text="20" />
 
-    <TextView
-        android:id="@+id/textView8"
-        style="@style/FieldStyle"
-        android:text="@string/quantity"
-        app:layout_constraintBaseline_toBaselineOf="@+id/transaction_quantity_et"
-        app:layout_constraintStart_toStartOf="parent" />
+        <EditText
+            android:id="@+id/transaction_quantity_et"
+            style="@style/editTextStyle"
+            android:ems="10"
+            android:inputType="number"
+            android:padding="@dimen/half_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@+id/transaction_quantity_in_stock" />
 
-    <EditText
-        android:id="@+id/transaction_price_et"
-        style="@style/editTextStyle"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@id/transaction_quantity_et" />
+        <TextView
+            android:id="@+id/textView8"
+            style="@style/FieldStyle"
+            android:text="@string/quantity"
+            app:layout_constraintBaseline_toBaselineOf="@+id/transaction_quantity_et"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView9"
-        style="@style/FieldStyle"
-        android:text="@string/price"
-        app:layout_constraintBaseline_toBaselineOf="@+id/transaction_price_et"
-        app:layout_constraintStart_toStartOf="parent" />
+        <EditText
+            android:id="@+id/transaction_price_et"
+            style="@style/editTextStyle"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@id/transaction_quantity_et" />
 
-    <TextView
-        android:id="@+id/transaction_date_tv"
-        style="@style/editTextStyle"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:padding="@dimen/half_padding"
-        app:layout_constraintEnd_toStartOf="@+id/change_date_btn"
-        app:layout_constraintStart_toEndOf="@+id/barrier"
-        app:layout_constraintTop_toBottomOf="@id/transaction_price_et"
-        android:textColor="@android:color/black"
-        tools:text="28-05-18" />
+        <TextView
+            android:id="@+id/textView9"
+            style="@style/FieldStyle"
+            android:text="@string/price"
+            app:layout_constraintBaseline_toBaselineOf="@+id/transaction_price_et"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView10"
-        style="@style/FieldStyle"
-        android:text="@string/date"
-        app:layout_constraintBaseline_toBaselineOf="@+id/transaction_date_tv"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/transaction_date_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:padding="@dimen/half_padding"
+            app:layout_constraintEnd_toStartOf="@+id/change_date_btn"
+            app:layout_constraintStart_toEndOf="@+id/barrier"
+            app:layout_constraintTop_toBottomOf="@id/transaction_price_et"
+            tools:text="28-05-18" />
 
-    <android.support.constraint.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="right"
-        app:constraint_referenced_ids="textView,textView7,textView8,textView9,textView10, textView11"
-        tools:layout_editor_absoluteX="91dp" />
+        <TextView
+            android:id="@+id/textView10"
+            style="@style/FieldStyle"
+            android:text="@string/date"
+            app:layout_constraintBaseline_toBaselineOf="@+id/transaction_date_tv"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/change_date_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:text="@string/change_date"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="italic"
-        app:layout_constraintBaseline_toBaselineOf="@+id/transaction_date_tv"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="right"
+            app:constraint_referenced_ids="textView,textView7,textView8,textView9,textView10, textView11"
+            tools:layout_editor_absoluteX="91dp" />
 
-    <ImageButton
-        android:id="@+id/add_enterprise_btn"
-        android:layout_width="@dimen/add_button_dimen"
-        android:layout_height="@dimen/add_button_dimen"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/margin_standard"
-        app:layout_constraintBottom_toBottomOf="@+id/enterprise_spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_baseline_add"
-        android:background="@color/colorPrimary"/>
+        <TextView
+            android:id="@+id/change_date_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:text="@string/change_date"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="italic|bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/transaction_date_tv"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+        <ImageButton
+            android:id="@+id/add_enterprise_btn"
+            android:layout_width="@dimen/add_button_dimen"
+            android:layout_height="@dimen/add_button_dimen"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/cd_add_enterprise_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/enterprise_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_add" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -43,7 +43,7 @@ public class AddEnterpriseFragment extends Fragment implements LoaderManager.Loa
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_add_enterpriser, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_add_enterprise, container, false);
         setHasOptionsMenu(true);
         Bundle bundle = getArguments();
         mTypeOfRelationship = bundle.getString(Constants.RELATION_TYPE);

@@ -17,7 +17,7 @@ import com.example.oya.inventoryapp.data.InventoryContract;
 
 public class EnterpriseCursorAdapter extends CursorAdapter {
 
-    final ItemClickListener mCallback;
+    private final ItemClickListener mCallback;
 
     public EnterpriseCursorAdapter(@NonNull Context context, Cursor cursor, ItemClickListener listener) {
         super(context, cursor, 0);
